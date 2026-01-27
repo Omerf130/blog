@@ -43,18 +43,37 @@ export default function NewPostPage() {
 
   const fetchData = async () => {
     try {
+      console.log('🔄 Fetching categories and lawyers...');
+      
       const [categoriesRes, lawyersRes] = await Promise.all([
         fetch('/api/categories'),
         fetch('/api/lawyers?isActive=true'),
       ]);
 
+      console.log('📡 Categories Response Status:', categoriesRes.status);
+      console.log('📡 Lawyers Response Status:', lawyersRes.status);
+
       const categoriesData = await categoriesRes.json();
       const lawyersData = await lawyersRes.json();
 
-      if (categoriesData.ok) setCategories(categoriesData.data.categories);
-      if (lawyersData.ok) setLawyers(lawyersData.data.lawyers);
+      console.log('📦 Categories Data:', categoriesData);
+      console.log('📦 Lawyers Data:', lawyersData);
+
+      if (categoriesData.ok) {
+        setCategories(categoriesData.data.categories);
+        console.log('✅ Categories loaded:', categoriesData.data.categories.length);
+      } else {
+        console.error('❌ Failed to load categories:', categoriesData.error);
+      }
+
+      if (lawyersData.ok) {
+        setLawyers(lawyersData.data.lawyers);
+        console.log('✅ Lawyers loaded:', lawyersData.data.lawyers.length);
+      } else {
+        console.error('❌ Failed to load lawyers:', lawyersData.error);
+      }
     } catch (err) {
-      console.error('Error fetching data:', err);
+      console.error('💥 Error fetching data:', err);
     } finally {
       setLoading(false);
     }
@@ -158,18 +177,27 @@ export default function NewPostPage() {
 
           <div className={styles.field}>
             <label className={styles.fieldLabel}>קטגוריות * (בחר לפחות אחת)</label>
-            <div className={styles.checkboxGroup}>
-              {categories.map((cat) => (
-                <label key={cat._id} className={styles.checkbox}>
-                  <input
-                    type="checkbox"
-                    checked={formData.categories.includes(cat._id)}
-                    onChange={() => toggleCategory(cat._id)}
-                  />
-                  <span>{cat.name}</span>
-                </label>
-              ))}
-            </div>
+            {categories.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>⚠️ אין קטגוריות זמינות</p>
+                <a href="/admin/categories" target="_blank" className={styles.link}>
+                  צור קטגוריה ראשונה ←
+                </a>
+              </div>
+            ) : (
+              <div className={styles.checkboxGroup}>
+                {categories.map((cat) => (
+                  <label key={cat._id} className={styles.checkbox}>
+                    <input
+                      type="checkbox"
+                      checked={formData.categories.includes(cat._id)}
+                      onChange={() => toggleCategory(cat._id)}
+                    />
+                    <span>{cat.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className={styles.field}>
