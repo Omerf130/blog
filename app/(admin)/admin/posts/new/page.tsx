@@ -1,0 +1,243 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import Textarea from '@/components/ui/Textarea';
+import styles from './post-form.module.scss';
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+interface Lawyer {
+  _id: string;
+  name: string;
+  title: string;
+}
+
+export default function NewPostPage() {
+  const router = useRouter();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const [formData, setFormData] = useState({
+    title: '',
+    summary: '',
+    content: '',
+    whatWeLearned: '',
+    categories: [] as string[],
+    disputeType: '',
+    authorLawyerId: '',
+    status: 'draft',
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [categoriesRes, lawyersRes] = await Promise.all([
+        fetch('/api/categories'),
+        fetch('/api/lawyers?isActive=true'),
+      ]);
+
+      const categoriesData = await categoriesRes.json();
+      const lawyersData = await lawyersRes.json();
+
+      if (categoriesData.ok) setCategories(categoriesData.data.categories);
+      if (lawyersData.ok) setLawyers(lawyersData.data.lawyers);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          disputeType: formData.disputeType || undefined,
+          authorLawyerId: formData.authorLawyerId || undefined,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        router.push('/admin/posts');
+      } else {
+        setError(data.error || 'שגיאה בשמירה');
+      }
+    } catch (err) {
+      setError('שגיאת רשת');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const toggleCategory = (catId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(catId)
+        ? prev.categories.filter((id) => id !== catId)
+        : [...prev.categories, catId],
+    }));
+  };
+
+  if (loading) {
+    return <div className={styles.loading}>טוען...</div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>📝 פוסט חדש</h1>
+        <Button variant="secondary" onClick={() => router.back()}>
+          ← חזרה
+        </Button>
+      </div>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        {error && <div className={styles.error}>{error}</div>}
+
+        <div className={styles.card}>
+          <h2>פרטים כלליים</h2>
+
+          <Input
+            label="כותרת *"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            required
+            placeholder="כותרת הפוסט"
+          />
+
+          <Textarea
+            label="תקציר *"
+            value={formData.summary}
+            onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+            required
+            placeholder="תקציר קצר (עד 500 תווים)"
+            rows={3}
+          />
+
+          <Textarea
+            label="תוכן מלא *"
+            value={formData.content}
+            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            required
+            placeholder="תוכן הפוסט המלא..."
+            rows={15}
+          />
+
+          <Textarea
+            label='מה למדנו (אופציונלי)'
+            value={formData.whatWeLearned}
+            onChange={(e) => setFormData({ ...formData, whatWeLearned: e.target.value })}
+            placeholder="לקח חשוב מהמאמר..."
+            rows={4}
+          />
+        </div>
+
+        <div className={styles.card}>
+          <h2>קטגוריזציה</h2>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>קטגוריות * (בחר לפחות אחת)</label>
+            <div className={styles.checkboxGroup}>
+              {categories.map((cat) => (
+                <label key={cat._id} className={styles.checkbox}>
+                  <input
+                    type="checkbox"
+                    checked={formData.categories.includes(cat._id)}
+                    onChange={() => toggleCategory(cat._id)}
+                  />
+                  <span>{cat.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>סוג סכסוך (אופציונלי)</label>
+            <select
+              className={styles.select}
+              value={formData.disputeType}
+              onChange={(e) => setFormData({ ...formData, disputeType: e.target.value })}
+            >
+              <option value="">ללא</option>
+              <option value="רטיבות">רטיבות</option>
+              <option value="ליקויי בנייה">ליקויי בנייה</option>
+              <option value="רכוש משותף">רכוש משותף</option>
+              <option value="פגמים נסתרים">פגמים נסתרים</option>
+              <option value="קבלנים">קבלנים</option>
+              <option value="שכנים">שכנים</option>
+              <option value="רעש">רעש</option>
+              <option value="הצפה">הצפה</option>
+              <option value="סדקים">סדקים</option>
+              <option value="גג דולף">גג דולף</option>
+              <option value="אחר">אחר</option>
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>עורך דין מייחס (אופציונלי)</label>
+            <select
+              className={styles.select}
+              value={formData.authorLawyerId}
+              onChange={(e) => setFormData({ ...formData, authorLawyerId: e.target.value })}
+            >
+              <option value="">ללא</option>
+              {lawyers.map((lawyer) => (
+                <option key={lawyer._id} value={lawyer._id}>
+                  {lawyer.name} - {lawyer.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.card}>
+          <h2>פרסום</h2>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>סטטוס</label>
+            <select
+              className={styles.select}
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            >
+              <option value="draft">טיוטה</option>
+              <option value="pendingApproval">ממתין לאישור</option>
+              <option value="published">פורסם</option>
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.actions}>
+          <Button type="submit" disabled={submitting || formData.categories.length === 0}>
+            {submitting ? 'שומר...' : 'שמור פוסט'}
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => router.back()}>
+            ביטול
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+

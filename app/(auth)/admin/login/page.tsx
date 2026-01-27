@@ -32,10 +32,10 @@ function LoginForm() {
         router.push(redirectTo);
         router.refresh();
       } else {
-        setError(data.error || 'Login failed');
+        setError(data.error || 'שגיאת התחברות');
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError('שגיאת רשת. נסה שוב.');
     } finally {
       setLoading(false);
     }

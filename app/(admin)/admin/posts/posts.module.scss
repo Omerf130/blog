@@ -1,0 +1,145 @@
+.container {
+  max-width: 1400px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--color-text);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+}
+
+.filters {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.tableCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+
+  p {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+
+  thead {
+    background: var(--color-bg-secondary);
+    
+    th {
+      padding: var(--spacing-md);
+      text-align: right;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--color-border);
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--color-bg-secondary);
+      }
+    }
+
+    td {
+      padding: var(--spacing-md);
+      vertical-align: top;
+    }
+  }
+}
+
+.postTitle {
+  strong {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+  }
+}
+
+.slug {
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.categoryTag {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.draft {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.published {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}
+

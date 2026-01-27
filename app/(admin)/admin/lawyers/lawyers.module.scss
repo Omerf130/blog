@@ -1,0 +1,146 @@
+.container {
+  max-width: 1200px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--color-text);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+}
+
+.formCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+  box-shadow: var(--shadow-sm);
+
+  h2 {
+    margin: 0 0 var(--spacing-xl) 0;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+  }
+}
+
+.error {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  label {
+    cursor: pointer;
+    font-size: 1rem;
+  }
+}
+
+.formActions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+.tableCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+
+  p {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: var(--color-bg-secondary);
+    
+    th {
+      padding: var(--spacing-md);
+      text-align: right;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 2px solid var(--color-border);
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--color-border);
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--color-bg-secondary);
+      }
+    }
+
+    td {
+      padding: var(--spacing-md);
+    }
+  }
+}
+
+.active {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.inactive {
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}
+
