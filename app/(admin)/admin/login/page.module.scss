@@ -1,0 +1,128 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: var(--spacing-lg);
+}
+
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: white;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+
+  h1 {
+    font-size: 1.875rem;
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.0625rem;
+  }
+}
+
+.form {
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+
+.error {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  font-size: 0.9375rem;
+}
+
+.field {
+  margin-bottom: var(--spacing-lg);
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+  }
+
+  input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    &:disabled {
+      background: var(--color-bg-secondary);
+      cursor: not-allowed;
+    }
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.footer {
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-lg);
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+}
+
