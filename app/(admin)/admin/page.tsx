@@ -1,25 +1,14 @@
 import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth';
+import { requireRole } from '@/lib/auth';
 import styles from './page.module.scss';
 
 export default async function AdminDashboardPage() {
-  // Check authentication
-  const user = await getCurrentUser();
-  
-  if (!user) {
+  // Require admin or editor role
+  let user;
+  try {
+    user = await requireRole(['admin', 'editor']);
+  } catch (error) {
     redirect('/admin/login');
-  }
-
-  // Check if user has admin or editor role
-  if (user.role !== 'admin' && user.role !== 'editor') {
-    return (
-      <div className={styles.container}>
-        <div className={styles.error}>
-          <h1>⛔ גישה נדחתה</h1>
-          <p>אין לך הרשאות לגשת לאזור זה</p>
-        </div>
-      </div>
-    );
   }
 
   return (
