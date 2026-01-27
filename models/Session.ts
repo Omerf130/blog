@@ -23,17 +23,14 @@ const SessionSchema = new Schema<ISession, ISessionModel>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User ID is required'],
-      index: true,
     },
     tokenHash: {
       type: String,
       required: [true, 'Token hash is required'],
-      unique: true,
     },
     expiresAt: {
       type: Date,
       required: [true, 'Expiration date is required'],
-      index: true, // For TTL index
     },
     userAgent: {
       type: String,

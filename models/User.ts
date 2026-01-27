@@ -59,8 +59,8 @@ const UserSchema = new Schema<IUser, IUserModel>(
   }
 );
 
-// Indexes
-UserSchema.index({ email: 1 }, { unique: true });
+// Indexes are defined inline in the schema (email: unique: true)
+// No need to define them again here
 
 // Static method: Hash password
 UserSchema.statics.hashPassword = async function (
