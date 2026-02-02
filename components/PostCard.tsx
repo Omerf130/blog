@@ -24,7 +24,7 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <article className={styles.card}>
-      <Link href={`/מאמר/${post.slugHe}`} className={styles.link}>
+      <Link href={`/post/${post.slugHe}`} className={styles.link}>
         <div className={styles.content}>
           <h3 className={styles.title}>{post.title}</h3>
           <p className={styles.summary}>{post.summary}</p>

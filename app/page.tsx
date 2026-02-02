@@ -60,7 +60,7 @@ export default async function HomePage() {
             {categories.map((cat) => (
               <a
                 key={cat._id}
-                href={`/קטגוריה/${cat.slugHe}`}
+                href={`/category/${cat.slugHe}`}
                 className={styles.categoryCard}
               >
                 {cat.name}

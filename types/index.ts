@@ -9,8 +9,8 @@ export type UserStatus = 'active' | 'blocked';
 // Post status
 export type PostStatus = 'draft' | 'pendingApproval' | 'published';
 
-// Comment status
-export type CommentStatus = 'visible' | 'hidden';
+// Comment status (moderation workflow)
+export type CommentStatus = 'pending' | 'approved' | 'rejected';
 
 // Dispute types (common in Israeli real estate law)
 export type DisputeType =

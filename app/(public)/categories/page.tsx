@@ -43,7 +43,7 @@ export default async function CategoriesPage() {
           {categoriesWithCounts.map((cat) => (
             <Link
               key={cat._id}
-              href={`/קטגוריה/${cat.slugHe}`}
+              href={`/category/${cat.slugHe}`}
               className={styles.card}
             >
               <h2 className={styles.cardTitle}>{cat.name}</h2>

@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
   try {
     user = await requireRole(['admin', 'editor']);
   } catch (error) {
-    redirect('/admin/login');
+    redirect('/login');
   }
 
   return (

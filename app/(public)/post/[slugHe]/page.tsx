@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
 import Link from 'next/link';
+import { getCurrentUser } from '@/lib/auth';
+import CommentSection from '@/components/CommentSection';
 import styles from './post.module.scss';
 
 export const dynamic = 'force-dynamic';
@@ -23,6 +25,9 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!postRaw) {
     notFound();
   }
+
+  // Check if user is authenticated
+  const user = await getCurrentUser();
 
   // Serialize the post data
   const post = {
@@ -65,7 +70,7 @@ export default async function PostPage({ params }: PostPageProps) {
             {post.categories.map((cat: any) => (
               <Link
                 key={cat._id}
-                href={`/קטגוריה/${cat.slugHe}`}
+                href={`/category/${cat.slugHe}`}
                 className={styles.category}
               >
                 {cat.name}
@@ -140,6 +145,9 @@ export default async function PostPage({ params }: PostPageProps) {
           צור קשר עכשיו
         </Link>
       </div>
+
+      {/* Comments Section */}
+      <CommentSection postId={post._id} isAuthenticated={!!user} />
     </article>
   );
 }

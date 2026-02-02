@@ -42,6 +42,7 @@
 .nav {
   display: flex;
   gap: var(--spacing-lg);
+  align-items: center;
 
   a {
     color: var(--color-text);
@@ -53,6 +54,20 @@
     &:hover {
       color: var(--color-primary);
     }
+  }
+}
+
+.loginLink {
+  padding: 0.5rem 1rem !important;
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-radius: 6px;
+  font-weight: 600 !important;
+
+  &:hover {
+    background: var(--primary-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 }
 

@@ -15,7 +15,7 @@ export default async function AdminLayout({
   try {
     user = await requireRole(['admin', 'editor']);
   } catch (error) {
-    redirect('/admin/login');
+    redirect('/login');
   }
 
   return (

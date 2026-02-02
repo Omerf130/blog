@@ -94,14 +94,19 @@ function LoginForm() {
         </form>
 
         <div className={styles.footer}>
-          <p>גישה למשתמשים מורשים בלבד</p>
+          <p>
+            אין לך חשבון?{' '}
+            <a href="/register" className={styles.link}>
+              הרשם כאן
+            </a>
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function AdminLoginPage() {
+export default function LoginPage() {
   return (
     <Suspense fallback={<div>טוען...</div>}>
       <LoginForm />

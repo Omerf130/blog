@@ -15,9 +15,11 @@ export default function PublicLayout({
           </Link>
           <nav className={styles.nav}>
             <Link href="/">ראשי</Link>
+            <Link href="/posts">מאמרים</Link>
             <Link href="/categories">קטגוריות</Link>
             <Link href="/about">אודות</Link>
             <Link href="/contact">צור קשר</Link>
+            <Link href="/login" className={styles.loginLink}>התחבר</Link>
           </nav>
         </div>
       </header>
@@ -34,6 +36,7 @@ export default function PublicLayout({
           <div className={styles.footerSection}>
             <h4>קישורים</h4>
             <Link href="/">ראשי</Link>
+            <Link href="/posts">מאמרים</Link>
             <Link href="/categories">קטגוריות</Link>
             <Link href="/about">אודות</Link>
           </div>

@@ -59,6 +59,41 @@ export default function PostsPage() {
     }
   };
 
+  const handleStatusChange = async (id: string, newStatus: string, title: string) => {
+    const statusNames: any = {
+      draft: 'טיוטה',
+      pendingApproval: 'ממתין לאישור',
+      published: 'פורסם',
+    };
+    
+    if (!confirm(`האם לשנות את הסטטוס של "${title}" ל-${statusNames[newStatus]}?`)) return;
+
+    try {
+      const updateData: any = { status: newStatus };
+      
+      // If publishing, set publishedAt to now
+      if (newStatus === 'published') {
+        updateData.publishedAt = new Date().toISOString();
+      }
+
+      const res = await fetch(`/api/posts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData),
+      });
+      
+      const data = await res.json();
+
+      if (data.ok) {
+        await fetchPosts();
+      } else {
+        alert(data.error || 'שגיאה בשינוי סטטוס');
+      }
+    } catch (err) {
+      alert('שגיאת רשת');
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const badges: any = {
       draft: { text: 'טיוטה', className: styles.draft },
@@ -157,6 +192,35 @@ export default function PostsPage() {
                       : new Date(post.createdAt).toLocaleDateString('he-IL')}
                   </td>
                   <td className={styles.actions}>
+                    {/* Status change buttons */}
+                    {post.status === 'draft' && (
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => handleStatusChange(post._id, 'published', post.title)}
+                      >
+                        ✅ פרסם
+                      </Button>
+                    )}
+                    {post.status === 'pendingApproval' && (
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => handleStatusChange(post._id, 'published', post.title)}
+                      >
+                        ✅ אשר ופרסם
+                      </Button>
+                    )}
+                    {post.status === 'published' && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => handleStatusChange(post._id, 'draft', post.title)}
+                      >
+                        📥 הסר מפרסום
+                      </Button>
+                    )}
+                    
                     <Link href={`/admin/posts/${post._id}/edit`}>
                       <Button size="sm" variant="secondary">
                         ✏️ ערוך
