@@ -27,8 +27,8 @@ function LoginForm() {
       const data = await response.json();
 
       if (data.ok) {
-        // Login successful - redirect
-        const redirectTo = searchParams.get('redirect') || '/admin';
+        // Login successful - redirect to home page or intended destination
+        const redirectTo = searchParams.get('redirect') || '/';
         router.push(redirectTo);
         router.refresh();
       } else {

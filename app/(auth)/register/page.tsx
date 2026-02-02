@@ -35,9 +35,27 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Registration failed');
       }
 
-      // Registration successful, redirect to login
-      alert('רישום הצליח! אפשר להתחבר עכשיו');
-      router.push('/login');
+      // Registration successful! Now auto-login the user
+      const loginRes = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: formData.email, 
+          password: formData.password 
+        }),
+      });
+
+      const loginData = await loginRes.json();
+
+      if (loginData.ok) {
+        // Auto-login successful - redirect to home page
+        router.push('/');
+        router.refresh();
+      } else {
+        // Auto-login failed, redirect to login page
+        alert('רישום הצליח! אנא התחבר');
+        router.push('/login');
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {

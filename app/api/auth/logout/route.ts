@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getSessionToken, clearSessionToken } from '@/lib/cookies';
 import { deleteSession } from '@/lib/auth';
 
@@ -6,7 +7,7 @@ import { deleteSession } from '@/lib/auth';
  * Logout endpoint
  * POST /api/auth/logout
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     // Get current session token
     const token = await getSessionToken();
@@ -20,16 +21,14 @@ export async function POST() {
     // Clear cookie
     await clearSessionToken();
 
-    return NextResponse.json({
-      ok: true,
-      data: { message: 'Logged out successfully' },
-    });
+    // Redirect to home page
+    const url = new URL('/', request.url);
+    return NextResponse.redirect(url);
   } catch (error: any) {
     console.error('Logout error:', error);
-    return NextResponse.json(
-      { ok: false, error: 'Logout failed' },
-      { status: 500 }
-    );
+    // On error, still try to redirect home
+    const url = new URL('/', request.url);
+    return NextResponse.redirect(url);
   }
 }
 
