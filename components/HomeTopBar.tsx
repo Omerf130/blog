@@ -78,6 +78,7 @@ export default function HomeTopBar() {
         <Link href="/posts" onClick={closeMenu}>מאמרים</Link>
         <Link href="/categories" onClick={closeMenu}>קטגוריות</Link>
         <Link href="/lawyers" onClick={closeMenu}>עורכי הדין</Link>
+        <Link href="/ask-lawyer" onClick={closeMenu}>⚖️ שאל עורך דין</Link>
         <Link href="/about" onClick={closeMenu}>אודות</Link>
         <Link href="/contact" onClick={closeMenu}>צור קשר</Link>
         <Link href="/login" className={styles.loginLink} onClick={closeMenu}>התחבר</Link>
