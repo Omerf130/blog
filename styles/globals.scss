@@ -6,37 +6,151 @@
 }
 
 :root {
-  // Color palette
-  --color-primary: #2563eb;
-  --color-primary-dark: #1e40af;
-  --color-secondary: #7c3aed;
-  --color-success: #16a34a;
-  --color-warning: #ea580c;
-  --color-danger: #dc2626;
+  // ============================================
+  // MINIMALISTIC DESIGN SYSTEM
+  // Based on professional slate & blue palette
+  // ============================================
+
+  // Primary Slate Colors (Headers, Navigation, Dark UI)
+  --slate-900: #0f172a;
+  --slate-800: #1e293b; // Your favorite! 
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+
+  // Accent Blue (CTAs, Links, Primary Actions)
+  --blue-700: #1d4ed8;
+  --blue-600: #2563eb; // Primary blue
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-300: #93c5fd;
+  --blue-100: #dbeafe;
+  --blue-50: #eff6ff;
+
+  // Success Green (Confirmations, Success States)
+  --green-700: #15803d;
+  --green-600: #16a34a;
+  --green-500: #22c55e;
+  --green-100: #dcfce7;
+  --green-50: #f0fdf4;
+
+  // Warning Orange (Warnings, Pending States)
+  --orange-700: #c2410c;
+  --orange-600: #ea580c;
+  --orange-500: #f97316;
+  --orange-100: #ffedd5;
+  --orange-50: #fff7ed;
+
+  // Error Red (Errors, Destructive Actions)
+  --red-700: #b91c1c;
+  --red-600: #dc2626;
+  --red-500: #ef4444;
+  --red-100: #fee2e2;
+  --red-50: #fef2f2;
+
+  // Semantic Color Tokens
+  // --------------------------------------------
   
-  --color-text: #1f2937;
-  --color-text-secondary: #6b7280;
+  // Primary (Your slate gradient colors)
+  --color-primary: var(--slate-800);
+  --color-primary-hover: var(--slate-900);
+  --color-primary-light: var(--slate-700);
+  
+  // Accent (For CTAs and important actions)
+  --color-accent: var(--blue-600);
+  --color-accent-hover: var(--blue-700);
+  --color-accent-light: var(--blue-500);
+  
+  // Text Colors
+  --color-text: var(--slate-800);
+  --color-text-light: var(--slate-600);
+  --color-text-muted: var(--slate-500);
+  
+  // Background Colors
   --color-bg: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-border: #e5e7eb;
+  --color-bg-secondary: var(--slate-50);
+  --color-bg-tertiary: var(--slate-100);
+  --color-bg-dark: var(--slate-800);
   
-  // Spacing
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  // Border Colors
+  --color-border: var(--slate-200);
+  --color-border-light: var(--slate-100);
+  --color-border-dark: var(--slate-300);
   
-  // Border radius
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  // Status Colors
+  --color-success: var(--green-600);
+  --color-success-bg: var(--green-50);
+  --color-success-border: var(--green-100);
   
-  // Shadows
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --color-warning: var(--orange-600);
+  --color-warning-bg: var(--orange-50);
+  --color-warning-border: var(--orange-100);
+  
+  --color-error: var(--red-600);
+  --color-error-bg: var(--red-50);
+  --color-error-border: var(--red-100);
+  
+  --color-info: var(--blue-600);
+  --color-info-bg: var(--blue-50);
+  --color-info-border: var(--blue-100);
+
+  // Gradients
+  --gradient-primary: linear-gradient(135deg, var(--slate-800) 0%, var(--slate-700) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--blue-600) 0%, var(--blue-700) 100%);
+  --gradient-light: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+  
+  // Legacy Support (for backward compatibility)
+  --primary-color: var(--blue-600);
+  --primary-hover: var(--blue-700);
+  --color-secondary: var(--slate-600);
+  --color-danger: var(--red-600);
+  
+  // Spacing Scale (8px base)
+  // --------------------------------------------
+  --spacing-xs: 0.25rem;   // 4px
+  --spacing-sm: 0.5rem;    // 8px
+  --spacing-md: 1rem;      // 16px
+  --spacing-lg: 1.5rem;    // 24px
+  --spacing-xl: 2rem;      // 32px
+  --spacing-2xl: 3rem;     // 48px
+  --spacing-3xl: 4rem;     // 64px
+  
+  // Border Radius
+  // --------------------------------------------
+  --radius-sm: 0.375rem;   // 6px
+  --radius-md: 0.5rem;     // 8px
+  --radius-lg: 0.75rem;    // 12px
+  --radius-xl: 1rem;       // 16px
+  --radius-full: 9999px;   // Fully rounded
+  
+  // Shadows (Minimalistic)
+  // --------------------------------------------
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  
+  // Transitions
+  // --------------------------------------------
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+  
+  // Z-Index Scale
+  // --------------------------------------------
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
 }
 
 html {

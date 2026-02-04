@@ -44,18 +44,16 @@ function LoginForm() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.header}>
-          <h1>כניסה למערכת</h1>
-          <p>משרד עורכי דין קשת</p>
-        </div>
+        <h1 className={styles.title}>כניסה למערכת</h1>
+        <p className={styles.subtitle}>משרד עורכי דין קשת</p>
+
+        {error && (
+          <div className={styles.error}>
+            ⚠️ {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {error && (
-            <div className={styles.error}>
-              ⚠️ {error}
-            </div>
-          )}
-
           <div className={styles.field}>
             <label htmlFor="email">אימייל</label>
             <input

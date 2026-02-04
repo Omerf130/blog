@@ -3,55 +3,58 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: var(--spacing-lg);
+  background: var(--gradient-primary); // Using your favorite slate gradient!
+  padding: var(--spacing-xl);
 }
 
 .card {
   background: white;
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-3xl);
   width: 100%;
-  max-width: 420px;
-  overflow: hidden;
+  max-width: 450px;
+  border: 1px solid var(--slate-700);
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-xl);
+  }
 }
 
-.header {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-  color: white;
-  padding: var(--spacing-2xl) var(--spacing-xl);
+.title {
+  font-size: 2rem;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
   text-align: center;
+  font-weight: 700;
+}
 
-  h1 {
-    font-size: 1.875rem;
-    margin: 0 0 var(--spacing-sm) 0;
-  }
-
-  p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 1.0625rem;
-  }
+.subtitle {
+  color: var(--color-text-light);
+  text-align: center;
+  margin: 0 0 var(--spacing-2xl) 0;
+  font-size: 1.0625rem;
 }
 
 .form {
-  padding: var(--spacing-2xl) var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .error {
-  background: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error);
   padding: var(--spacing-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-lg);
   text-align: center;
   font-size: 0.9375rem;
+  font-weight: 500;
 }
 
 .field {
-  margin-bottom: var(--spacing-lg);
-
   label {
     display: block;
     font-weight: 600;
@@ -62,45 +65,53 @@
 
   input {
     width: 100%;
-    padding: var(--spacing-md);
+    padding: 0.75rem 1rem;
     border: 2px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     font-size: 1rem;
-    transition: all 0.2s;
+    transition: var(--transition-base);
     font-family: inherit;
+    background: white;
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-border-dark);
+    }
 
     &:focus {
       outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--blue-100);
     }
 
     &:disabled {
       background: var(--color-bg-secondary);
       cursor: not-allowed;
+      color: var(--color-text-muted);
     }
 
     &::placeholder {
-      color: #aaa;
+      color: var(--color-text-muted);
     }
   }
 }
 
 .submitBtn {
   width: 100%;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  padding: 0.875rem var(--spacing-lg);
+  background: var(--color-accent);
   color: white;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: 1.0625rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--transition-base);
+  box-shadow: var(--shadow-sm);
 
   &:hover:not(:disabled) {
+    background: var(--color-accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    box-shadow: var(--shadow-md);
   }
 
   &:active:not(:disabled) {
@@ -108,30 +119,33 @@
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 }
 
 .footer {
-  background: var(--color-bg-secondary);
-  padding: var(--spacing-lg);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
   text-align: center;
+  color: var(--color-text-light);
   border-top: 1px solid var(--color-border);
 
   p {
     margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 }
 
 .link {
-  color: var(--primary-color);
+  color: var(--color-accent);
   font-weight: 600;
   text-decoration: none;
+  transition: var(--transition-fast);
 
   &:hover {
+    color: var(--color-accent-hover);
     text-decoration: underline;
   }
 }

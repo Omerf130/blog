@@ -6,8 +6,8 @@
 
 .sidebar {
   width: 280px;
-  background: white;
-  border-left: 1px solid var(--color-border);
+  background: var(--gradient-primary);
+  border-left: 1px solid var(--slate-900);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -15,27 +15,28 @@
   top: 0;
   bottom: 0;
   overflow-y: auto;
+  box-shadow: var(--shadow-lg);
 }
 
 .logo {
   padding: var(--spacing-xl);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   h2 {
     margin: 0 0 var(--spacing-sm) 0;
     font-size: 1.5rem;
-    color: var(--color-primary);
+    color: white;
   }
 }
 
 .userBadge {
   font-size: 0.9375rem;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
 }
 
 .role {
-  color: var(--color-primary);
+  color: var(--blue-300);
   font-weight: 600;
 }
 
@@ -47,42 +48,47 @@
 .navLink {
   display: block;
   padding: var(--spacing-md) var(--spacing-xl);
-  color: var(--color-text);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   font-size: 1.0625rem;
-  transition: all 0.2s;
+  transition: var(--transition-base);
+  border-right: 3px solid transparent;
 
   &:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-right-color: var(--blue-400);
   }
 
   &:global(.active) {
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: white;
     font-weight: 600;
+    border-right-color: var(--blue-300);
   }
 }
 
 .sidebarFooter {
   padding: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logoutBtn {
   width: 100%;
   padding: var(--spacing-md);
-  background: var(--color-danger);
+  background: rgba(239, 68, 68, 0.2);
   color: white;
-  border: none;
-  border-radius: var(--radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--transition-base);
 
   &:hover {
-    background: #b91c1c;
+    background: var(--color-error);
+    border-color: var(--red-700);
+    transform: translateY(-1px);
   }
 }
 
