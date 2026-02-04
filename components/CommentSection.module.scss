@@ -53,7 +53,7 @@
 
 .submitBtn {
   padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
+  background: #2563eb;
   color: white;
   border: none;
   border-radius: 4px;
@@ -63,7 +63,7 @@
   transition: all 0.2s;
 
   &:hover:not(:disabled) {
-    background: var(--primary-hover);
+    background: #1e40af;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }

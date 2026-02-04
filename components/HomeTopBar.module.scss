@@ -1,0 +1,238 @@
+.topBar {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-bottom: 3px solid #3b82f6;
+  position: relative;
+  z-index: 101;
+}
+
+.topBarContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem;
+  }
+}
+
+// Hamburger Menu - Always Visible
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 102;
+  flex-shrink: 0;
+
+  span {
+    width: 2rem;
+    height: 0.25rem;
+    background: white;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+  }
+
+  &.open span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+
+  &.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  &.open span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 480px) {
+    width: 1.75rem;
+    height: 1.75rem;
+
+    span {
+      width: 1.75rem;
+    }
+  }
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.socialIcon {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #3b82f6;
+    transform: translateY(-2px);
+  }
+}
+
+.contactInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 0.9375rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8125rem;
+  }
+}
+
+.callUs {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.phoneNumber {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #3b82f6;
+  }
+}
+
+// Navigation - Slides from right (like PublicHeader)
+.nav {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  height: 100vh;
+  width: 280px;
+  max-width: 80%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1rem 2rem 2rem;
+  gap: 1.5rem;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 101;
+
+  &.open {
+    right: 0;
+  }
+
+  a {
+    width: 100%;
+    padding: 1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.125rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Close Button
+.closeButton {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+
+  &:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.loginLink {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem !important;
+  background: var(--primary-color, #2563eb) !important;
+  color: white !important;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  text-align: center;
+  border: none !important;
+
+  &:hover {
+    background: var(--primary-hover, #1e40af) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Overlay
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

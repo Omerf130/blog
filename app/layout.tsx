@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import HomeTopBar from '@/components/HomeTopBar';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he" dir="rtl">
-      <body>{children}</body>
+      <body>
+        <HomeTopBar />
+        {children}
+      </body>
     </html>
   );
 }

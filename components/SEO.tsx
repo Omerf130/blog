@@ -16,7 +16,7 @@ export function generateMetadata({
   title,
   description,
   canonical,
-  ogImage = '/assets/logo.jpeg',
+  ogImage = '/assets/logo.png',
   ogType = 'website',
   publishedTime,
   modifiedTime,

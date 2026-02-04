@@ -8,21 +8,6 @@ export default function PublicLayout({
 }) {
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <Link href="/" className={styles.logo}>
-            <h1>⚖️ משרד עורכי דין קשת</h1>
-          </Link>
-          <nav className={styles.nav}>
-            <Link href="/">ראשי</Link>
-            <Link href="/posts">מאמרים</Link>
-            <Link href="/categories">קטגוריות</Link>
-            <Link href="/about">אודות</Link>
-            <Link href="/contact">צור קשר</Link>
-            <Link href="/login" className={styles.loginLink}>התחבר</Link>
-          </nav>
-        </div>
-      </header>
 
       <main className={styles.main}>{children}</main>
 
