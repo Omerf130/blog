@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
 import Link from 'next/link';
@@ -14,12 +15,54 @@ interface PostPageProps {
   };
 }
 
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  await connectDB();
+  const { slugHe } = params;
+
+  const post = await Post.findOne({ slugHe, status: 'published' })
+    .populate('authorLawyerId', 'name')
+    .lean();
+
+  if (!post) {
+    return {
+      title: 'מאמר לא נמצא',
+    };
+  }
+
+  const siteName = 'משרד עורכי דין אשכנזי';
+  const postData = post as any;
+  const title = `${postData.title} | ${siteName}`;
+  const author = postData.authorLawyerId?.name || siteName;
+
+  return {
+    title,
+    description: postData.summary,
+    keywords: postData.tags?.join(', '),
+    authors: [{ name: author }],
+    openGraph: {
+      title,
+      description: postData.summary,
+      type: 'article',
+      siteName,
+      publishedTime: postData.publishedAt?.toISOString(),
+      modifiedTime: postData.updatedAt?.toISOString(),
+      authors: [author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: post.summary,
+    },
+  };
+}
+
 export default async function PostPage({ params }: PostPageProps) {
   await connectDB();
 
   const postRaw = await Post.findOne({ slugHe: params.slugHe, status: 'published' })
     .populate('categories', 'name slugHe')
-    .populate('authorLawyerId', 'name title bio photoUrl email phone')
+    .populate('authorLawyerId', 'name title bio photoUrl email phone slugHe')
     .lean();
 
   if (!postRaw) {
@@ -30,27 +73,30 @@ export default async function PostPage({ params }: PostPageProps) {
   const user = await getCurrentUser();
 
   // Serialize the post data
+  const postData = postRaw as any;
   const post = {
-    _id: (postRaw._id as any).toString(),
-    title: postRaw.title,
-    summary: postRaw.summary,
-    content: postRaw.content,
-    whatWeLearned: postRaw.whatWeLearned,
-    slugHe: postRaw.slugHe,
-    publishedAt: postRaw.publishedAt,
-    categories: (postRaw.categories as any)?.map((cat: any) => ({
+    _id: postData._id.toString(),
+    title: postData.title,
+    summary: postData.summary,
+    content: postData.content,
+    whatWeLearned: postData.whatWeLearned,
+    slugHe: postData.slugHe,
+    publishedAt: postData.publishedAt,
+    updatedAt: postData.updatedAt,
+    categories: postData.categories?.map((cat: any) => ({
       _id: cat._id.toString(),
       name: cat.name,
       slugHe: cat.slugHe,
     })) || [],
-    authorLawyerId: (postRaw.authorLawyerId as any) ? {
-      _id: (postRaw.authorLawyerId as any)._id.toString(),
-      name: (postRaw.authorLawyerId as any).name,
-      title: (postRaw.authorLawyerId as any).title,
-      bio: (postRaw.authorLawyerId as any).bio,
-      photoUrl: (postRaw.authorLawyerId as any).photoUrl,
-      email: (postRaw.authorLawyerId as any).email,
-      phone: (postRaw.authorLawyerId as any).phone,
+    authorLawyerId: postData.authorLawyerId ? {
+      _id: postData.authorLawyerId._id.toString(),
+      name: postData.authorLawyerId.name,
+      title: postData.authorLawyerId.title,
+      bio: postData.authorLawyerId.bio,
+      photoUrl: postData.authorLawyerId.photoUrl,
+      email: postData.authorLawyerId.email,
+      phone: postData.authorLawyerId.phone,
+      slugHe: postData.authorLawyerId.slugHe,
     } : null,
   };
 
@@ -148,6 +194,40 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Comments Section */}
       <CommentSection postId={post._id} isAuthenticated={!!user} />
+
+      {/* Structured Data (JSON-LD) for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            description: post.summary,
+            author: {
+              '@type': 'Person',
+              name: post.authorLawyerId?.name || 'משרד עורכי דין אשכנזי',
+            },
+            datePublished: post.publishedAt?.toISOString(),
+            dateModified: post.updatedAt?.toISOString(),
+            publisher: {
+              '@type': 'Organization',
+              name: 'משרד עורכי דין אשכנזי',
+              logo: {
+                '@type': 'ImageObject',
+                url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ashkenazi-law.com'}/assets/logo.jpeg`,
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ashkenazi-law.com'}/post/${post.slugHe}`,
+            },
+            ...(post.categories && post.categories.length > 0 && {
+              keywords: post.categories.map((cat: any) => cat.name).join(', '),
+            }),
+          }),
+        }}
+      />
     </article>
   );
 }

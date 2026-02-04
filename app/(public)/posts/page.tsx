@@ -12,7 +12,7 @@ export default async function AllPostsPage() {
   // Fetch all published posts
   const postsRaw = await Post.find({ status: 'published' })
     .populate('categories', 'name slugHe')
-    .populate('authorLawyerId', 'name title')
+    .populate('authorLawyerId', 'name title slugHe')
     .sort({ publishedAt: -1 })
     .select('-content')
     .lean();
@@ -36,6 +36,7 @@ export default async function AllPostsPage() {
       _id: post.authorLawyerId._id.toString(),
       name: post.authorLawyerId.name,
       title: post.authorLawyerId.title,
+      slugHe: post.authorLawyerId.slugHe,
     } : undefined,
   }));
 

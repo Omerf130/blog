@@ -8,7 +8,7 @@ interface PostCardProps {
     summary: string;
     slugHe: string;
     categories?: Array<{ _id: string; name: string; slugHe: string }>;
-    authorLawyerId?: { _id: string; name: string; title?: string };
+    authorLawyerId?: { _id: string; name: string; title?: string; slugHe?: string };
     publishedAt?: Date;
   };
 }
@@ -49,9 +49,20 @@ export default function PostCard({ post }: PostCardProps) {
 
           {post.authorLawyerId && (
             <div className={styles.author}>
-              <span className={styles.authorName}>{post.authorLawyerId.name}</span>
-              {post.authorLawyerId.title && (
-                <span className={styles.authorTitle}> • {post.authorLawyerId.title}</span>
+              {post.authorLawyerId.slugHe ? (
+                <Link href={`/lawyer/${post.authorLawyerId.slugHe}`} className={styles.authorLink}>
+                  <span className={styles.authorName}>{post.authorLawyerId.name}</span>
+                  {post.authorLawyerId.title && (
+                    <span className={styles.authorTitle}> • {post.authorLawyerId.title}</span>
+                  )}
+                </Link>
+              ) : (
+                <>
+                  <span className={styles.authorName}>{post.authorLawyerId.name}</span>
+                  {post.authorLawyerId.title && (
+                    <span className={styles.authorTitle}> • {post.authorLawyerId.title}</span>
+                  )}
+                </>
               )}
             </div>
           )}

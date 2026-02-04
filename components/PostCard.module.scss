@@ -77,6 +77,21 @@
   color: var(--color-text-secondary);
 }
 
+.authorLink {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--color-primary);
+    
+    .authorName {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+  }
+}
+
 .authorName {
   font-weight: 600;
   color: var(--color-text);

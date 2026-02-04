@@ -1,12 +1,32 @@
+import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
 import Category from '@/models/Category';
 import PostCard from '@/components/PostCard';
+import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
 import styles from './home.module.scss';
 
 export const dynamic = 'force-dynamic';
+
+// Metadata for homepage
+export const metadata: Metadata = {
+  title: 'משרד עורכי דין אשכנזי - בלוג משפטי למקרקעין ונדל"ן',
+  description: 'הבלוג המשפטי המוביל בנושאי נדל"ן, מקרקעין, ליקויי בנייה ודיני שכנים. טיפים משפטיים, מאמרים מקצועיים וייעוץ משפטי מעורכי דין מומחים.',
+  keywords: 'עורך דין נדל"ן, עורך דין מקרקעין, ליקויי בנייה, דיני שכנים, בלוג משפטי, ייעוץ משפטי',
+  openGraph: {
+    title: 'משרד עורכי דין אשכנזי - בלוג משפטי למקרקעין ונדל"ן',
+    description: 'הבלוג המשפטי המוביל בנושאי נדל"ן, מקרקעין, ליקויי בנייה ודיני שכנים',
+    type: 'website',
+    siteName: 'משרד עורכי דין אשכנזי',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'משרד עורכי דין אשכנזי - בלוג משפטי',
+    description: 'הבלוג המשפטי המוביל בנושאי נדל"ן ומקרקעין',
+  },
+};
 
 export default async function HomePage() {
   await connectDB();
@@ -17,7 +37,7 @@ export default async function HomePage() {
   // Fetch latest published posts
   const postsRaw = await Post.find({ status: 'published' })
     .populate('categories', 'name slugHe')
-    .populate('authorLawyerId', 'name title')
+    .populate('authorLawyerId', 'name title slugHe')
     .sort({ publishedAt: -1 })
     .limit(6)
     .select('-content')
@@ -42,6 +62,7 @@ export default async function HomePage() {
       _id: post.authorLawyerId._id.toString(),
       name: post.authorLawyerId.name,
       title: post.authorLawyerId.title,
+      slugHe: post.authorLawyerId.slugHe,
     } : undefined,
   }));
 
@@ -120,17 +141,7 @@ export default async function HomePage() {
 
           <div className={styles.navRight}>
             <div className={styles.searchWrapper}>
-              <input
-                type="search"
-                placeholder="חיפוש במאמרים..."
-                className={styles.searchInput}
-              />
-              <button className={styles.searchButton} aria-label="חפש">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.35-4.35"/>
-                </svg>
-              </button>
+              <SearchBar />
             </div>
 
             <div className={styles.authLinks}>

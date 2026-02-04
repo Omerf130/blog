@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Category from '@/models/Category';
 import Post from '@/models/Post';
@@ -10,6 +11,39 @@ export const dynamic = 'force-dynamic';
 interface CategoryPageProps {
   params: {
     slugHe: string;
+  };
+}
+
+// Generate metadata for category pages
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  await connectDB();
+  const { slugHe } = params;
+
+  const category = await Category.findOne({ slugHe }).lean();
+
+  if (!category) {
+    return {
+      title: 'קטגוריה לא נמצאה',
+    };
+  }
+
+  const title = `${category.name} | משרד עורכי דין אשכנזי`;
+  const description = category.description || `מאמרים בנושא ${category.name} - טיפים משפטיים, ייעוץ מקצועי ומידע משפטי`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName: 'משרד עורכי דין אשכנזי',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   };
 }
 
@@ -27,7 +61,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     categories: category._id,
   })
     .populate('categories', 'name slugHe')
-    .populate('authorLawyerId', 'name title')
+    .populate('authorLawyerId', 'name title slugHe')
     .sort({ publishedAt: -1 })
     .select('-content')
     .lean();
@@ -48,6 +82,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       _id: post.authorLawyerId._id.toString(),
       name: post.authorLawyerId.name,
       title: post.authorLawyerId.title,
+      slugHe: post.authorLawyerId.slugHe,
     } : undefined,
   }));
 
