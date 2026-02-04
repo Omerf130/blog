@@ -3,63 +3,6 @@
   background: #f5f5f5;
 }
 
-// Top Bar
-.topBar {
-  background: #2c3e50;
-  color: white;
-  padding: 0.75rem 0;
-  font-size: 0.875rem;
-}
-
-.topBarContent {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.socialLinks {
-  display: flex;
-  gap: 1rem;
-}
-
-.socialIcon {
-  color: white;
-  transition: color 0.2s, transform 0.2s;
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    color: #3498db;
-    transform: translateY(-2px);
-  }
-}
-
-.contactInfo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.callUs {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.875rem;
-}
-
-.phoneNumber {
-  color: white;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.125rem;
-  transition: color 0.2s;
-
-  &:hover {
-    color: #3498db;
-  }
-}
-
 // Hero Section
 .hero {
   background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
@@ -438,12 +381,6 @@
 }
 
 @media (max-width: 768px) {
-  .topBarContent {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-  }
-
   .hero {
     padding: 2rem 1rem;
   }
@@ -504,15 +441,6 @@
 }
 
 @media (max-width: 480px) {
-  .phoneNumber {
-    font-size: 1rem;
-  }
-
-  .placeholderBox {
-    padding: 1.5rem 2rem;
-    font-size: 1rem;
-  }
-
   .heroTitle {
     font-size: 1.5rem;
   }
