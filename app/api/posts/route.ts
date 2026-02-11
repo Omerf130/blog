@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
-
-export const dynamic = 'force-dynamic';
 import { requireRole, getCurrentUser } from '@/lib/auth';
 import { postSchema } from '@/lib/validators/post';
 import { generateUniqueSlug } from '@/lib/slug';
@@ -63,7 +61,7 @@ export async function GET(request: NextRequest) {
         .sort({ publishedAt: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select('-content -featuredImage'), // Exclude full content and image data from list
+        .select('-content'), // Exclude full content from list
       Post.countDocuments(query),
     ]);
 
