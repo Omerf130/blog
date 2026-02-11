@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
         .sort({ publishedAt: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select('-content'), // Exclude full content from list
+        .select('-content -featuredImage'), // Exclude full content and image data from list
       Post.countDocuments(query),
     ]);
 
