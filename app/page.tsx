@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
+// Import models used in .populate() so Mongoose registers their schemas
+import '@/models/Category';
+import '@/models/Lawyer';
 import PostCard from '@/components/PostCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';

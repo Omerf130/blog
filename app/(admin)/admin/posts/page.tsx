@@ -27,7 +27,7 @@ export default function PostsPage() {
 
   const fetchPosts = async () => {
     try {
-      let url = '/api/posts?limit=50';
+      let url = '/api/posts?limit=15';
       if (filter) url += `&status=${filter}`;
 
       const res = await fetch(url);
