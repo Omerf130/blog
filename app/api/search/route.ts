@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
+// Import models used in .populate() — required in serverless (Vercel) so Mongoose registers them
+import '@/models/Category';
+import '@/models/Lawyer';
 import { successResponse, errorResponse } from '@/lib/api-response';
 
 export const dynamic = 'force-dynamic';

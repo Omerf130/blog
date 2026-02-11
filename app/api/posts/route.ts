@@ -1,6 +1,10 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
+// Import models used in .populate() — required in serverless (Vercel) so Mongoose registers them
+import '@/models/Category';
+import '@/models/Lawyer';
+import '@/models/User';
 import { requireRole, getCurrentUser } from '@/lib/auth';
 import { postSchema } from '@/lib/validators/post';
 import { generateUniqueSlug } from '@/lib/slug';

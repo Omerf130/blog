@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Comment from '@/models/Comment';
 import Post from '@/models/Post';
+// Import models used in .populate() — required in serverless (Vercel) so Mongoose registers them
+import '@/models/User';
 import { getCurrentUser } from '@/lib/auth';
 import { commentSchema } from '@/lib/validators/comment';
 import { successResponse, validationErrorResponse, handleApiError } from '@/lib/api-response';
