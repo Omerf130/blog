@@ -94,7 +94,7 @@ const PostSchema = new Schema<IPost>(
       },
       mimetype: {
         type: String,
-        enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
+        enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif'],
       },
       filename: String,
       size: {

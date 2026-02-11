@@ -56,7 +56,7 @@ export const postSchema = z.object({
   featuredImage: z
     .object({
       data: z.string().min(1, 'Image data is required'),
-      mimetype: z.enum(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']),
+      mimetype: z.enum(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif']),
       filename: z.string().min(1, 'Filename is required'),
       size: z.number().max(5000000, 'Image must be less than 5MB'),
     })

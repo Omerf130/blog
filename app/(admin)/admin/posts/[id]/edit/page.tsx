@@ -155,7 +155,7 @@ export default function EditPostPage() {
       return;
     }
 
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
     if (!validTypes.includes(file.type)) {
       setError('פורמט תמונה לא נתמך. השתמש ב-JPEG, PNG, WEBP או GIF');
       return;
@@ -263,7 +263,7 @@ export default function EditPostPage() {
               <div className={styles.imageUpload}>
                 <input
                   type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/avif"
                   onChange={handleImageUpload}
                   className={styles.fileInput}
                   id="imageUploadEdit"

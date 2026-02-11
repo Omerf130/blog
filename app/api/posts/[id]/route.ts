@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
+
+export const dynamic = 'force-dynamic';
 import { requireRole } from '@/lib/auth';
 import { postUpdateSchema } from '@/lib/validators/post';
 import { generateUniqueSlug } from '@/lib/slug';
