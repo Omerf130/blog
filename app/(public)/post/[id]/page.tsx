@@ -11,20 +11,26 @@ export const dynamic = 'force-dynamic';
 
 interface PostPageProps {
   params: {
-    slugHe: string;
+    id: string;
   };
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  await connectDB();
-  const { slugHe } = params;
+  const { id } = params;
 
-  const post = await Post.findOne({ slugHe, status: 'published' })
+  // Validate ObjectId format
+  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+    return { title: 'מאמר לא נמצא' };
+  }
+
+  await connectDB();
+
+  const post = await Post.findById(id)
     .populate('authorLawyerId', 'name')
     .lean();
 
-  if (!post) {
+  if (!post || (post as any).status !== 'published') {
     return {
       title: 'מאמר לא נמצא',
     };
@@ -60,12 +66,17 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 export default async function PostPage({ params }: PostPageProps) {
   await connectDB();
 
-  const postRaw = await Post.findOne({ slugHe: params.slugHe, status: 'published' })
+  // Validate that id looks like a valid MongoDB ObjectId
+  if (!/^[0-9a-fA-F]{24}$/.test(params.id)) {
+    notFound();
+  }
+
+  const postRaw = await Post.findById(params.id)
     .populate('categories', 'name slugHe')
     .populate('authorLawyerId', 'name title bio photoUrl email phone slugHe')
     .lean();
 
-  if (!postRaw) {
+  if (!postRaw || (postRaw as any).status !== 'published') {
     notFound();
   }
 
@@ -88,6 +99,11 @@ export default async function PostPage({ params }: PostPageProps) {
       name: cat.name,
       slugHe: cat.slugHe,
     })) || [],
+    featuredImage: postData.featuredImage?.data ? {
+      data: postData.featuredImage.data,
+      mimetype: postData.featuredImage.mimetype,
+      filename: postData.featuredImage.filename,
+    } : null,
     authorLawyerId: postData.authorLawyerId ? {
       _id: postData.authorLawyerId._id.toString(),
       name: postData.authorLawyerId.name,
@@ -108,6 +124,9 @@ export default async function PostPage({ params }: PostPageProps) {
       })
     : null;
 
+
+    console.log(post);
+
   return (
     <article className={styles.container}>
       <div className={styles.header}>
@@ -126,6 +145,16 @@ export default async function PostPage({ params }: PostPageProps) {
         )}
 
         <h1 className={styles.title}>{post.title}</h1>
+
+        {post.featuredImage && (
+          <div className={styles.featuredImage}>
+            <img
+              src={post.featuredImage.data}
+              alt={post.title}
+              className={styles.featuredImg}
+            />
+          </div>
+        )}
 
         {post.summary && <p className={styles.summary}>{post.summary}</p>}
 
@@ -220,7 +249,7 @@ export default async function PostPage({ params }: PostPageProps) {
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ashkenazi-law.com'}/post/${post.slugHe}`,
+              '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ashkenazi-law.com'}/post/${post._id}`,
             },
             ...(post.categories && post.categories.length > 0 && {
               keywords: post.categories.map((cat: any) => cat.name).join(', '),

@@ -10,6 +10,11 @@ interface PostCardProps {
     categories?: Array<{ _id: string; name: string; slugHe: string }>;
     authorLawyerId?: { _id: string; name: string; title?: string; slugHe?: string };
     publishedAt?: Date;
+    featuredImage?: {
+      data: string;
+      mimetype: string;
+      filename: string;
+    };
   };
 }
 
@@ -24,7 +29,16 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <article className={styles.card}>
-      <Link href={`/post/${post.slugHe}`} className={styles.link}>
+      <Link href={`/post/${post._id}`} className={styles.link}>
+        {post.featuredImage && (
+          <div className={styles.imageWrapper}>
+            <img
+              src={post.featuredImage.data}
+              alt={post.title}
+              className={styles.image}
+            />
+          </div>
+        )}
         <div className={styles.content}>
           <h3 className={styles.title}>{post.title}</h3>
           <p className={styles.summary}>{post.summary}</p>

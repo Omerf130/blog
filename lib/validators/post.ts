@@ -53,6 +53,15 @@ export const postSchema = z.object({
     })
     .optional(),
   schemaTypes: z.array(z.enum(schemaTypes)).optional(),
+  featuredImage: z
+    .object({
+      data: z.string().min(1, 'Image data is required'),
+      mimetype: z.enum(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']),
+      filename: z.string().min(1, 'Filename is required'),
+      size: z.number().max(5000000, 'Image must be less than 5MB'),
+    })
+    .optional()
+    .nullable(),
 });
 
 export const postUpdateSchema = postSchema.partial();

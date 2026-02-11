@@ -26,6 +26,8 @@ export default function NewPostPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     title: '',
     summary: '',
@@ -35,6 +37,7 @@ export default function NewPostPage() {
     disputeType: '',
     authorLawyerId: '',
     status: 'draft',
+    featuredImage: null as { data: string; mimetype: string; filename: string; size: number } | null,
   });
 
   useEffect(() => {
@@ -92,6 +95,7 @@ export default function NewPostPage() {
           ...formData,
           disputeType: formData.disputeType || undefined,
           authorLawyerId: formData.authorLawyerId || undefined,
+          featuredImage: formData.featuredImage || undefined,
         }),
       });
 
@@ -107,6 +111,44 @@ export default function NewPostPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5000000) {
+      setError('גודל התמונה חייב להיות קטן מ-5MB');
+      return;
+    }
+
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      setError('פורמט תמונה לא נתמך. השתמש ב-JPEG, PNG, WEBP או GIF');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setFormData((prev) => ({
+        ...prev,
+        featuredImage: {
+          data: base64String,
+          mimetype: file.type,
+          filename: file.name,
+          size: file.size,
+        },
+      }));
+      setImagePreview(base64String);
+      setError('');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setFormData((prev) => ({ ...prev, featuredImage: null }));
+    setImagePreview(null);
   };
 
   const toggleCategory = (catId: string) => {
@@ -170,6 +212,38 @@ export default function NewPostPage() {
             placeholder="לקח חשוב מהמאמר..."
             rows={4}
           />
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>תמונה ראשית (אופציונלי)</label>
+            <p className={styles.helperText}>גודל מקסימלי: 5MB | פורמטים נתמכים: JPEG, PNG, WEBP, GIF</p>
+
+            {!imagePreview ? (
+              <div className={styles.imageUpload}>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  onChange={handleImageUpload}
+                  className={styles.fileInput}
+                  id="imageUpload"
+                />
+                <label htmlFor="imageUpload" className={styles.uploadLabel}>
+                  <span className={styles.uploadIcon}>📷</span>
+                  <span>בחר תמונה</span>
+                </label>
+              </div>
+            ) : (
+              <div className={styles.imagePreview}>
+                <img src={imagePreview} alt="תצוגה מקדימה" className={styles.previewImage} />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className={styles.removeImageBtn}
+                >
+                  🗑️ הסר תמונה
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={styles.card}>

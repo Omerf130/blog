@@ -161,7 +161,7 @@ export default function CommentsPage() {
               <div className={styles.postInfo}>
                 <strong>מאמר:</strong>{' '}
                 <a
-                  href={`/מאמר/${comment.post.slugHe}`}
+                  href={`/post/${comment.post._id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

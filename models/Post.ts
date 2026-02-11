@@ -11,6 +11,12 @@ export interface IPost extends Document {
   authorUserId?: mongoose.Types.ObjectId;
   categories: mongoose.Types.ObjectId[];
   disputeType?: DisputeType;
+  featuredImage?: {
+    data: string;
+    mimetype: string;
+    filename: string;
+    size: number;
+  };
   slugHe: string;
   status: PostStatus;
   commentsLocked: boolean;
@@ -80,6 +86,21 @@ const PostSchema = new Schema<IPost>(
         'גג דולף',
         'אחר',
       ],
+    },
+    featuredImage: {
+      data: {
+        type: String,
+        maxlength: [16000000, 'Image data too large (max 16MB)'],
+      },
+      mimetype: {
+        type: String,
+        enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
+      },
+      filename: String,
+      size: {
+        type: Number,
+        max: [5000000, 'Image file size cannot exceed 5MB'],
+      },
     },
     slugHe: {
       type: String,
