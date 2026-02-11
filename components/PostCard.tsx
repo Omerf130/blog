@@ -40,20 +40,20 @@ export default function PostCard({ post }: PostCardProps) {
           </div>
         )}
         <div className={styles.content}>
+          {post.categories && post.categories.length > 0 && (
+            <div className={styles.categoryLabels}>
+              {post.categories.slice(0, 2).map((cat) => (
+                <span key={cat._id} className={styles.category}>
+                  {cat.name}
+                </span>
+              ))}
+            </div>
+          )}
+
           <h3 className={styles.title}>{post.title}</h3>
           <p className={styles.summary}>{post.summary}</p>
 
           <div className={styles.meta}>
-            {post.categories && post.categories.length > 0 && (
-              <div className={styles.categories}>
-                {post.categories.slice(0, 2).map((cat) => (
-                  <span key={cat._id} className={styles.category}>
-                    {cat.name}
-                  </span>
-                ))}
-              </div>
-            )}
-
             {publishDate && (
               <time className={styles.date} dateTime={post.publishedAt?.toString()}>
                 {publishDate}

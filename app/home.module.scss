@@ -268,10 +268,86 @@
   text-align: center;
 }
 
-.postsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+.postsFeed {
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.pageLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: var(--transition-base);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+}
+
+.pageLinkActive {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+  cursor: default;
+
+  &:hover {
+    background: var(--color-accent);
+  }
+}
+
+.pageLinkDisabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pageEllipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2.5rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  user-select: none;
 }
 
 .categoryGrid {
@@ -379,10 +455,6 @@
   .heroTitle {
     font-size: 2rem;
   }
-
-  .postsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
 }
 
 @media (max-width: 768px) {
@@ -430,10 +502,6 @@
 
   .container {
     padding: 2rem 1rem;
-  }
-
-  .postsGrid {
-    grid-template-columns: 1fr;
   }
 
   .categoryGrid {

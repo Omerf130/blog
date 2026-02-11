@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
-import Category from '@/models/Category';
 import PostCard from '@/components/PostCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
@@ -9,6 +8,8 @@ import { getCurrentUser } from '@/lib/auth';
 import styles from './home.module.scss';
 
 export const dynamic = 'force-dynamic';
+
+const POSTS_PER_PAGE = 6;
 
 // Metadata for homepage
 export const metadata: Metadata = {
@@ -28,48 +29,79 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage() {
+/** Build the page number array with ellipsis for the pagination bar. */
+function getPageNumbers(current: number, total: number): (number | '...')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | '...')[] = [1];
+  if (current > 3) pages.push('...');
+  for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+    pages.push(i);
+  }
+  if (current < total - 2) pages.push('...');
+  pages.push(total);
+  return pages;
+}
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   await connectDB();
 
   // Check if user is authenticated
   const user = await getCurrentUser();
 
-  // Fetch latest published posts
-  const postsRaw = await Post.find({ status: 'published' })
-    .populate('categories', 'name slugHe')
-    .populate('authorLawyerId', 'name title slugHe')
-    .sort({ publishedAt: -1 })
-    .limit(6)
-    .select('-content')
-    .lean();
+  // Parse & clamp page number
+  const pageParam = parseInt(searchParams.page || '1', 10);
+  const requestedPage = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
 
-  // Fetch all categories
-  const categoriesRaw = await Category.find().sort({ name: 1 }).lean();
+  const query = { status: 'published' };
 
-  // Serialize data for client components
+  // Fetch posts + total count in parallel
+  const [postsRaw, totalPosts] = await Promise.all([
+    Post.find(query)
+      .populate('categories', 'name slugHe')
+      .populate('authorLawyerId', 'name title slugHe')
+      .sort({ publishedAt: -1 })
+      .skip((requestedPage - 1) * POSTS_PER_PAGE)
+      .limit(POSTS_PER_PAGE)
+      .select('-content')
+      .lean(),
+    Post.countDocuments(query),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalPosts / POSTS_PER_PAGE));
+  const currentPage = Math.min(requestedPage, totalPages);
+  const pageNumbers = getPageNumbers(currentPage, totalPages);
+
+  // Serialize data for client components (include featuredImage for hero)
   const posts = postsRaw.map((post: any) => ({
     _id: post._id.toString(),
     title: post.title,
     summary: post.summary,
     slugHe: post.slugHe,
     publishedAt: post.publishedAt,
+    featuredImage: post.featuredImage?.data
+      ? {
+          data: post.featuredImage.data,
+          mimetype: post.featuredImage.mimetype,
+          filename: post.featuredImage.filename,
+        }
+      : undefined,
     categories: post.categories?.map((cat: any) => ({
       _id: cat._id.toString(),
       name: cat.name,
       slugHe: cat.slugHe,
     })),
-    authorLawyerId: post.authorLawyerId ? {
-      _id: post.authorLawyerId._id.toString(),
-      name: post.authorLawyerId.name,
-      title: post.authorLawyerId.title,
-      slugHe: post.authorLawyerId.slugHe,
-    } : undefined,
-  }));
-
-  const categories = categoriesRaw.map((cat: any) => ({
-    _id: cat._id.toString(),
-    name: cat.name,
-    slugHe: cat.slugHe,
+    authorLawyerId: post.authorLawyerId
+      ? {
+          _id: post.authorLawyerId._id.toString(),
+          name: post.authorLawyerId.name,
+          title: post.authorLawyerId.title,
+          slugHe: post.authorLawyerId.slugHe,
+        }
+      : undefined,
   }));
 
   return (
@@ -94,19 +126,6 @@ export default async function HomePage() {
       {/* Main Navigation */}
       <nav className={styles.mainNav}>
         <div className={styles.navContent}>
-          <div className={styles.navLinks}>
-            {categories.slice(0, 4).map((cat) => (
-              <Link key={cat._id} href={`/category/${cat.slugHe}`} className={styles.navLink}>
-                {cat.name}
-              </Link>
-            ))}
-            {categories.length > 4 && (
-              <Link href="/categories" className={styles.navLink}>
-                עוד קטגוריות
-              </Link>
-            )}
-          </div>
-
           <div className={styles.navRight}>
             <div className={styles.searchWrapper}>
               <SearchBar />
@@ -168,41 +187,71 @@ export default async function HomePage() {
         </div>
       </nav>
 
-      {/* Latest Posts Section */}
+      {/* Blog Feed */}
       <div className={styles.container}>
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>📰 מאמרים אחרונים</h2>
+
           {posts.length === 0 ? (
             <div className={styles.empty}>
               <p>אין מאמרים עדיין</p>
               <Link href="/admin/posts/new">צור מאמר ראשון</Link>
             </div>
           ) : (
-            <div className={styles.postsGrid}>
-              {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
-              ))}
-            </div>
+            <>
+              <div className={styles.postsFeed}>
+                {posts.map((post) => (
+                  <PostCard key={post._id} post={post} />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <nav className={styles.pagination} aria-label="ניווט עמודים">
+                  {currentPage > 1 ? (
+                    <Link href={`/?page=${currentPage - 1}`} className={styles.pageLink}>
+                      הקודם
+                    </Link>
+                  ) : (
+                    <span className={styles.pageLinkDisabled}>הקודם</span>
+                  )}
+
+                  {pageNumbers.map((pageNum, idx) =>
+                    pageNum === '...' ? (
+                      <span key={`ellipsis-${idx}`} className={styles.pageEllipsis}>
+                        ...
+                      </span>
+                    ) : pageNum === currentPage ? (
+                      <span
+                        key={pageNum}
+                        className={`${styles.pageLink} ${styles.pageLinkActive}`}
+                      >
+                        {pageNum}
+                      </span>
+                    ) : (
+                      <Link
+                        key={pageNum}
+                        href={`/?page=${pageNum}`}
+                        className={styles.pageLink}
+                      >
+                        {pageNum}
+                      </Link>
+                    )
+                  )}
+
+                  {currentPage < totalPages ? (
+                    <Link href={`/?page=${currentPage + 1}`} className={styles.pageLink}>
+                      הבא
+                    </Link>
+                  ) : (
+                    <span className={styles.pageLinkDisabled}>הבא</span>
+                  )}
+                </nav>
+              )}
+            </>
           )}
         </div>
 
-        {/* Categories Section */}
-        {categories.length > 0 && (
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>📂 נושאים</h2>
-            <div className={styles.categoryGrid}>
-              {categories.map((cat) => (
-                <a
-                  key={cat._id}
-                  href={`/category/${cat.slugHe}`}
-                  className={styles.categoryCard}
-                >
-                  {cat.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
