@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { requireRole } from '@/lib/auth';
 import styles from './admin-layout.module.scss';
 import Link from 'next/link';
+import AdminSidebar from '@/components/AdminSidebar';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export default async function AdminLayout({
 
   return (
     <div className={styles.container}>
-      <aside className={styles.sidebar}>
+      <AdminSidebar>
         <div className={styles.logo}>
           <h2>🎛️ פאנל ניהול</h2>
           <p className={styles.userBadge}>
@@ -47,12 +48,6 @@ export default async function AdminLayout({
           <Link href="/admin/leads" className={styles.navLink}>
             📥 לידים
           </Link>
-          <Link href="/admin/downloads" className={styles.navLink}>
-            📥 הורדות
-          </Link>
-          <Link href="/admin/videos" className={styles.navLink}>
-            📹 וידאו
-          </Link>
         </nav>
 
         <div className={styles.sidebarFooter}>
@@ -62,7 +57,7 @@ export default async function AdminLayout({
             </button>
           </form>
         </div>
-      </aside>
+      </AdminSidebar>
 
       <main className={styles.main}>{children}</main>
     </div>

@@ -143,3 +143,20 @@
   white-space: nowrap;
 }
 
+// Responsive
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .filters {
+    gap: var(--spacing-xs);
+  }
+}
+
