@@ -1,11 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './HomeTopBar.module.scss';
 
 export default function HomeTopBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && data.data?.user) {
+          setUser(data.data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -13,6 +27,17 @@ export default function HomeTopBar() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    closeMenu();
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setUser(null);
+      router.refresh();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   };
 
   return (
@@ -76,12 +101,22 @@ export default function HomeTopBar() {
 
         <Link href="/" onClick={closeMenu}>ראשי</Link>
         <Link href="/posts" onClick={closeMenu}>מאמרים</Link>
-        <Link href="/categories" onClick={closeMenu}>קטגוריות</Link>
-        <Link href="/lawyers" onClick={closeMenu}>עורכי הדין</Link>
-        <Link href="/ask-lawyer" onClick={closeMenu}>⚖️ שאל עורך דין</Link>
+        {/* <Link href="/lawyers" onClick={closeMenu}>עורכי הדין</Link> */}
+        <Link href="/ask-lawyer" onClick={closeMenu}>שאל עורך דין</Link>
         <Link href="/about" onClick={closeMenu}>אודות</Link>
         <Link href="/contact" onClick={closeMenu}>צור קשר</Link>
-        <Link href="/login" className={styles.loginLink} onClick={closeMenu}>התחבר</Link>
+
+        {user ? (
+          <button
+            type="button"
+            className={styles.logoutLink}
+            onClick={handleLogout}
+          >
+            התנתק
+          </button>
+        ) : (
+          <Link href="/login" className={styles.loginLink} onClick={closeMenu}>התחבר</Link>
+        )}
       </nav>
 
       {/* Overlay */}
@@ -91,4 +126,3 @@ export default function HomeTopBar() {
     </>
   );
 }
-

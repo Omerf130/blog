@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import HomeTopBar from '@/components/HomeTopBar';
+import Footer from '@/components/Footer';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -14,9 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he" dir="rtl">
-      <body>
+      <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <HomeTopBar />
-        {children}
+        <div style={{ flex: 1 }}>
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );
