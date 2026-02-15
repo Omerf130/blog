@@ -47,16 +47,20 @@ export async function GET(req: NextRequest) {
       isLawyerReply: comment.isLawyerReply,
       createdAt: comment.createdAt,
       updatedAt: comment.updatedAt,
-      user: {
-        _id: comment.userId._id.toString(),
-        name: comment.userId.name,
-        email: comment.userId.email,
-      },
-      post: {
-        _id: comment.postId._id.toString(),
-        title: comment.postId.title,
-        slugHe: comment.postId.slugHe,
-      },
+      user: comment.userId
+        ? {
+            _id: comment.userId._id.toString(),
+            name: comment.userId.name,
+            email: comment.userId.email,
+          }
+        : { _id: '', name: 'משתמש שנמחק', email: '' },
+      post: comment.postId
+        ? {
+            _id: comment.postId._id.toString(),
+            title: comment.postId.title,
+            slugHe: comment.postId.slugHe,
+          }
+        : { _id: '', title: 'מאמר שנמחק', slugHe: '' },
     }));
 
     return successResponse({

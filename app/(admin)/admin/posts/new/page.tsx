@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import mammoth from 'mammoth';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
@@ -27,6 +28,11 @@ export default function NewPostPage() {
   const [error, setError] = useState('');
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Word file state
+  const [docxActive, setDocxActive] = useState(false);
+  const [docxFileName, setDocxFileName] = useState('');
+  const [docxProcessing, setDocxProcessing] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -80,6 +86,61 @@ export default function NewPostPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDocxUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      setError('יש להעלות קובץ Word בפורמט .docx בלבד');
+      return;
+    }
+
+    setDocxProcessing(true);
+    setError('');
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+
+      // Extract title from filename (remove .docx extension)
+      const title = file.name.replace(/\.docx$/i, '');
+
+      setFormData((prev) => ({
+        ...prev,
+        title,
+        content: result.value,
+      }));
+
+      setDocxActive(true);
+      setDocxFileName(file.name);
+
+      if (result.messages.length > 0) {
+        console.warn('Mammoth warnings:', result.messages);
+      }
+
+      console.log('✅ Word file converted successfully');
+    } catch (err) {
+      console.error('❌ Error converting Word file:', err);
+      setError('שגיאה בהמרת קובץ ה-Word. ודא שהקובץ תקין.');
+    } finally {
+      setDocxProcessing(false);
+      // Reset the input so the same file can be re-uploaded
+      e.target.value = '';
+    }
+  };
+
+  const removeDocx = () => {
+    setDocxActive(false);
+    setDocxFileName('');
+    setFormData((prev) => ({
+      ...prev,
+      title: '',
+      content: '',
+      whatWeLearned: '',
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -176,16 +237,65 @@ export default function NewPostPage() {
       <form onSubmit={handleSubmit} className={styles.form}>
         {error && <div className={styles.error}>{error}</div>}
 
+        {/* Word File Upload Section */}
+        <div className={styles.card}>
+          <h2>📄 העלאת קובץ Word</h2>
+          <p className={styles.helperText}>
+            העלה קובץ Word (.docx) כדי למלא את תוכן הפוסט אוטומטית. שאר השדות (תמונה, קטגוריות) יישארו לבחירתך.
+          </p>
+
+          {!docxActive ? (
+            <div className={styles.docxUpload}>
+              <input
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={handleDocxUpload}
+                className={styles.fileInput}
+                id="docxUpload"
+                disabled={docxProcessing}
+              />
+              <label htmlFor="docxUpload" className={styles.uploadLabel}>
+                <span className={styles.uploadIcon}>📄</span>
+                <span>{docxProcessing ? 'ממיר קובץ...' : 'בחר קובץ Word (.docx)'}</span>
+              </label>
+            </div>
+          ) : (
+            <div className={styles.docxActiveBox}>
+              <div className={styles.docxInfo}>
+                <span className={styles.docxIcon}>✅</span>
+                <span className={styles.docxName}>{docxFileName}</span>
+                <span className={styles.docxBadge}>קובץ Word נטען</span>
+              </div>
+              <button
+                type="button"
+                onClick={removeDocx}
+                className={styles.removeDocxBtn}
+              >
+                🗑️ הסר קובץ Word
+              </button>
+            </div>
+          )}
+        </div>
+
         <div className={styles.card}>
           <h2>פרטים כלליים</h2>
 
-          <Input
-            label="כותרת *"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            required
-            placeholder="כותרת הפוסט"
-          />
+          {docxActive && (
+            <div className={styles.docxNotice}>
+              📌 השדות הבאים מולאו מקובץ ה-Word ואינם ניתנים לעריכה. להסרת הקובץ, לחץ על "הסר קובץ Word" למעלה.
+            </div>
+          )}
+
+          <div className={docxActive ? styles.disabledField : undefined}>
+            <Input
+              label="כותרת *"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
+              placeholder="כותרת הפוסט"
+              disabled={docxActive}
+            />
+          </div>
 
           <Textarea
             label="תקציר *"
@@ -196,22 +306,28 @@ export default function NewPostPage() {
             rows={3}
           />
 
-          <Textarea
-            label="תוכן מלא *"
-            value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            required
-            placeholder="תוכן הפוסט המלא..."
-            rows={15}
-          />
+          <div className={docxActive ? styles.disabledField : undefined}>
+            <Textarea
+              label="תוכן מלא *"
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              required
+              placeholder="תוכן הפוסט המלא..."
+              rows={15}
+              disabled={docxActive}
+            />
+          </div>
 
-          <Textarea
-            label='מה למדנו (אופציונלי)'
-            value={formData.whatWeLearned}
-            onChange={(e) => setFormData({ ...formData, whatWeLearned: e.target.value })}
-            placeholder="לקח חשוב מהמאמר..."
-            rows={4}
-          />
+          <div className={docxActive ? styles.disabledField : undefined}>
+            <Textarea
+              label='מה למדנו (אופציונלי)'
+              value={formData.whatWeLearned}
+              onChange={(e) => setFormData({ ...formData, whatWeLearned: e.target.value })}
+              placeholder="לקח חשוב מהמאמר..."
+              rows={4}
+              disabled={docxActive}
+            />
+          </div>
 
           <div className={styles.field}>
             <label className={styles.fieldLabel}>תמונה ראשית (אופציונלי)</label>
@@ -342,4 +458,3 @@ export default function NewPostPage() {
     </div>
   );
 }
-

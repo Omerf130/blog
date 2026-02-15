@@ -203,6 +203,92 @@
   }
 }
 
+// Word (.docx) upload section
+.docxUpload {
+  margin-top: var(--spacing-sm);
+}
+
+.docxActiveBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: var(--radius-md);
+}
+
+.docxInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.docxIcon {
+  font-size: 1.25rem;
+}
+
+.docxName {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  word-break: break-all;
+}
+
+.docxBadge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  background: #16a34a;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.removeDocxBtn {
+  flex-shrink: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-error, #dc2626);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: var(--transition-base);
+  white-space: nowrap;
+
+  &:hover {
+    background: #b91c1c;
+  }
+}
+
+.docxNotice {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+// Disabled field overlay when Word file is active
+.disabledField {
+  opacity: 0.55;
+  pointer-events: none;
+  position: relative;
+
+  input,
+  textarea {
+    background: #f1f5f9 !important;
+    cursor: not-allowed;
+  }
+}
+
 .actions {
   display: flex;
   gap: var(--spacing-md);
