@@ -20,15 +20,18 @@ export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchPosts();
-  }, [filter]);
+  }, [filter, searchQuery]);
 
   const fetchPosts = async () => {
     try {
       let url = '/api/posts?limit=15';
       if (filter) url += `&status=${filter}`;
+      if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -116,6 +119,38 @@ export default function PostsPage() {
           <Button>+ פוסט חדש</Button>
         </Link>
       </div>
+
+      <form
+        className={styles.searchBar}
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSearchQuery(search);
+        }}
+      >
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="חיפוש לפי כותרת..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Button type="submit" size="sm">
+          🔍 חפש
+        </Button>
+        {searchQuery && (
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              setSearch('');
+              setSearchQuery('');
+            }}
+          >
+            ✕ נקה
+          </Button>
+        )}
+      </form>
 
       <div className={styles.filters}>
         <Button

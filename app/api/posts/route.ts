@@ -48,9 +48,9 @@ export async function GET(request: NextRequest) {
       query.disputeType = disputeType;
     }
 
-    // Text search
+    // Partial text search (substring match on title)
     if (q) {
-      query.$text = { $search: q };
+      query.title = { $regex: q, $options: 'i' };
     }
 
     // Calculate pagination
