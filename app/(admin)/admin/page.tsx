@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { requireRole } from '@/lib/auth';
 import styles from './page.module.scss';
 
@@ -31,41 +32,40 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
-            <h3>📝 פוסטים</h3>
-            <p>ניהול פוסטים בבלוג המשפטי</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
+          <Link href="/admin/posts" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>📝 פוסטים</h3>
+              <p>ניהול פוסטים בבלוג המשפטי</p>
+            </div>
+          </Link>
 
-          <div className={styles.card}>
-            <h3>📂 קטגוריות</h3>
-            <p>ניהול קטגוריות ונושאים</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
+          <Link href="/admin/categories" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>📂 קטגוריות</h3>
+              <p>ניהול קטגוריות ונושאים</p>
+            </div>
+          </Link>
 
-          <div className={styles.card}>
-            <h3>💬 תגובות</h3>
-            <p>מודרציה של תגובות</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
+          <Link href="/admin/comments" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>💬 תגובות</h3>
+              <p>מודרציה של תגובות</p>
+            </div>
+          </Link>
 
-          <div className={styles.card}>
-            <h3>📥 לידים</h3>
-            <p>ניהול פניות ולידים</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
+          <Link href="/admin/leads" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>📥 לידים</h3>
+              <p>ניהול פניות ולידים</p>
+            </div>
+          </Link>
 
-          <div className={styles.card}>
-            <h3>📹 וידאו</h3>
-            <p>ספריית וידאו</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
-
-          <div className={styles.card}>
-            <h3>📥 הורדות</h3>
-            <p>קבצים להורדה</p>
-            <span className={styles.badge}>בקרוב</span>
-          </div>
+          <Link href="/admin/video" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>📹 וידאו</h3>
+              <p>ספריית וידאו</p>
+            </div>
+          </Link>
         </div>
 
         <div className={styles.info}>

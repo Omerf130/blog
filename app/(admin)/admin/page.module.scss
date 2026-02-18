@@ -67,6 +67,20 @@
   margin-bottom: var(--spacing-2xl);
 }
 
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+
+  &:hover .card {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
+}
+
 .card {
   background: white;
   padding: var(--spacing-xl);
@@ -74,11 +88,8 @@
   box-shadow: var(--shadow-sm);
   transition: all 0.2s;
   position: relative;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-  }
+  border: 2px solid transparent;
+  height: 100%;
 
   h3 {
     margin: 0 0 var(--spacing-sm) 0;
@@ -91,17 +102,6 @@
     color: var(--color-text-secondary);
     font-size: 0.9375rem;
   }
-}
-
-.badge {
-  display: inline-block;
-  background: var(--color-bg-secondary);
-  color: var(--color-text-secondary);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: var(--spacing-md);
 }
 
 .info {
