@@ -48,6 +48,9 @@ export default async function AdminLayout({
           <Link href="/admin/leads" className={styles.navLink}>
             📥 לידים
           </Link>
+          <Link href="/admin/video" className={styles.navLink}>
+            🎬 סרטון
+          </Link>
         </nav>
 
         <div className={styles.sidebarFooter}>

@@ -1,11 +1,13 @@
 import { Metadata } from 'next';
 import connectDB from '@/lib/db';
 import Post from '@/models/Post';
+import SiteSettings from '@/models/SiteSettings';
 // Import models used in .populate() so Mongoose registers their schemas
 import '@/models/Category';
 import '@/models/Lawyer';
 import PostCard from '@/components/PostCard';
 import SearchBar from '@/components/SearchBar';
+import YouTubePlayer from '@/components/YouTubePlayer';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
 import styles from './home.module.scss';
@@ -61,8 +63,8 @@ export default async function HomePage({
 
   const query = { status: 'published' };
 
-  // Fetch posts + total count in parallel
-  const [postsRaw, totalPosts] = await Promise.all([
+  // Fetch posts + total count + site settings in parallel
+  const [postsRaw, totalPosts, siteSettings] = await Promise.all([
     Post.find(query)
       .populate('categories', 'name slugHe')
       .populate('authorLawyerId', 'name title slugHe')
@@ -72,7 +74,11 @@ export default async function HomePage({
       .select('-content')
       .lean(),
     Post.countDocuments(query),
+    SiteSettings.findOne({ key: 'main' }).lean(),
   ]);
+
+  const videoUrl = (siteSettings as any)?.videoUrl || '';
+  const videoUrl2 = (siteSettings as any)?.videoUrl2 || '';
 
   const totalPages = Math.max(1, Math.ceil(totalPosts / POSTS_PER_PAGE));
   const currentPage = Math.min(requestedPage, totalPages);
@@ -125,6 +131,8 @@ export default async function HomePage({
           </p>
         </div>
       </div>
+
+     
 
       {/* Main Navigation */}
       <nav className={styles.mainNav}>
@@ -182,6 +190,14 @@ export default async function HomePage({
           </div>
         </div>
       </nav>
+
+       {/* YouTube Videos (from admin settings) */}
+       {videoUrl && (
+        <div className={styles.videoSection}>
+          <YouTubePlayer videoUrl={videoUrl} />
+        </div>
+      )}
+     
 
       {/* Blog Feed */}
       <div className={styles.container}>
@@ -249,6 +265,12 @@ export default async function HomePage({
         </div>
 
       </div>
+
+      {videoUrl2 && (
+        <div className={styles.videoSection}>
+          <YouTubePlayer videoUrl={videoUrl2} />
+        </div>
+      )}
     </div>
   );
 }

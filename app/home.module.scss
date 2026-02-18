@@ -3,6 +3,13 @@
   background: var(--color-bg-secondary);
 }
 
+// YouTube Video Section
+.videoSection {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-xl) 0;
+}
+
 // Hero Section
 .hero {
   background: var(--gradient-accent);
