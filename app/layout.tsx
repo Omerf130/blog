@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import HomeTopBar from '@/components/HomeTopBar';
 import Footer from '@/components/Footer';
+import { AuthProvider } from '@/contexts/AuthContext';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -16,11 +17,13 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl">
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <HomeTopBar />
-        <div style={{ flex: 1 }}>
-          {children}
-        </div>
-        <Footer />
+        <AuthProvider>
+          <HomeTopBar />
+          <div style={{ flex: 1 }}>
+            {children}
+          </div>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

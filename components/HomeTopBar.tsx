@@ -1,25 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import styles from './HomeTopBar.module.scss';
 
 export default function HomeTopBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok && data.data?.user) {
-          setUser(data.data.user);
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const { user, refreshUser } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,8 +21,7 @@ export default function HomeTopBar() {
     closeMenu();
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      setUser(null);
-      router.refresh();
+      await refreshUser();
     } catch (err) {
       console.error('Logout error:', err);
     }

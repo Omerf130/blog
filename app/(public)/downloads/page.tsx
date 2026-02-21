@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 import styles from './downloads.module.scss';
 
 interface DocItem {
@@ -17,32 +18,18 @@ interface DocItem {
 export default function DownloadsPage() {
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<{ name: string } | null>(null);
-  const [authChecked, setAuthChecked] = useState(false);
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    // Check auth and fetch documents in parallel
-    Promise.all([
-      fetch('/api/auth/me')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.ok && data.data?.user) {
-            setUser(data.data.user);
-          }
-        })
-        .catch(() => {}),
-      fetch('/api/documents/public')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.ok) {
-            setDocuments(data.data.documents);
-          }
-        })
-        .catch((err) => console.error('Error fetching documents:', err)),
-    ]).finally(() => {
-      setAuthChecked(true);
-      setLoading(false);
-    });
+    fetch('/api/documents/public')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setDocuments(data.data.documents);
+        }
+      })
+      .catch((err) => console.error('Error fetching documents:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   const formatFileSize = (bytes: number): string => {
@@ -58,7 +45,7 @@ export default function DownloadsPage() {
     return <span className={`${styles.fileTypeBadge} ${styles.docx}`}>DOCX</span>;
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return <div className={styles.loading}>טוען...</div>;
   }
 
@@ -71,7 +58,7 @@ export default function DownloadsPage() {
         </p>
       </div>
 
-      {!user && authChecked ? (
+      {!user ? (
         <div className={styles.loginPrompt}>
           <p>יש להתחבר כדי להוריד מסמכים</p>
           <Link href="/login" className={styles.loginBtn}>

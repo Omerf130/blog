@@ -2,11 +2,13 @@
 
 import { useState, FormEvent, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import styles from './page.module.scss';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshUser } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,10 +29,10 @@ function LoginForm() {
       const data = await response.json();
 
       if (data.ok) {
-        // Login successful - redirect to home page or intended destination
+        // Login successful - update auth state and redirect
+        await refreshUser();
         const redirectTo = searchParams.get('redirect') || '/';
         router.push(redirectTo);
-        router.refresh();
       } else {
         setError(data.error || 'שגיאת התחברות');
       }
@@ -63,7 +65,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              placeholder="Enter email..."
+              placeholder="הכנס אימייל..."
               autoComplete="email"
             />
           </div>

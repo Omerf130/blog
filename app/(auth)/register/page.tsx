@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { useAuth } from '@/contexts/AuthContext';
 import styles from './register.module.scss';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,9 +50,9 @@ export default function RegisterPage() {
       const loginData = await loginRes.json();
 
       if (loginData.ok) {
-        // Auto-login successful - redirect to home page
+        // Auto-login successful - update auth state and redirect
+        await refreshUser();
         router.push('/');
-        router.refresh();
       } else {
         // Auto-login failed, redirect to login page
         alert('רישום הצליח! אנא התחבר');
@@ -86,7 +88,7 @@ export default function RegisterPage() {
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            placeholder="Enter email..."
+            placeholder="הכנס אימייל..."
             required
             disabled={loading}
           />
