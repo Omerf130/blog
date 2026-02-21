@@ -7,7 +7,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'משרד עורכי דין קשת - בלוג משפטי',
+  title: 'משרד עורכי דין אשכנזי - בלוג משפטי',
   description: 'בלוג משפטי המתמחה במקרקעין ודיני בניין',
 };
 

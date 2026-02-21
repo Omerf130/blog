@@ -3,13 +3,13 @@ import styles from './about.module.scss';
 export default function AboutPage() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>אודות משרד עורכי דין קשת</h1>
+      <h1 className={styles.title}>אודות משרד עורכי דין אשכנזי</h1>
 
       <div className={styles.content}>
         <section className={styles.section}>
           <h2>מי אנחנו</h2>
           <p>
-            משרד עורכי דין קשת מתמחה בדיני מקרקעין, נדל"ן וליקויי בנייה. אנו מספקים
+            משרד עורכי דין אשכנזי מתמחה בדיני מקרקעין, נדל"ן וליקויי בנייה. אנו מספקים
             ייעוץ משפטי מקצועי ומלווים את לקוחותינו לאורך כל הדרך.
           </p>
         </section>

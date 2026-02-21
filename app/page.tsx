@@ -127,7 +127,7 @@ export default async function HomePage({
           </div>
           <h1 className={styles.heroTitle}>הבלוג המשפטי למקרקעין ונדל"ן</h1>
           <p className={styles.heroSubtitle}>
-            טיפים חיוניים בנושאי נדל"ן, ליקויי בנייה ודיני מקרקעין מעורכי הדין במשרד קשת
+            טיפים חיוניים בנושאי נדל"ן, ליקויי בנייה ודיני מקרקעין מעורכי הדין במשרד 
           </p>
         </div>
       </div>

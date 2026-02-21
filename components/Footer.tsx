@@ -105,7 +105,7 @@ export default function Footer() {
       <div className={styles.footerBottom}>
         <div className={styles.bottomContent}>
           <p className={styles.copyright}>
-            &copy; {new Date().getFullYear()} משרד עורכי דין קשת. כל הזכויות שמורות.
+            &copy; {new Date().getFullYear()} משרד עורכי דין . כל הזכויות שמורות.
           </p>
           <p className={styles.credit}>
             אתר זה נבנה על ידי{' '}

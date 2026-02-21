@@ -47,7 +47,7 @@ function LoginForm() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>כניסה למערכת</h1>
-        <p className={styles.subtitle}>משרד עורכי דין קשת</p>
+        <p className={styles.subtitle}>משרד עורכי דין אשכנזי</p>
 
         {error && (
           <div className={styles.error}>
