@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import HomeTopBar from '@/components/HomeTopBar';
 import Footer from '@/components/Footer';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import { AuthProvider } from '@/contexts/AuthContext';
 import '@/styles/globals.scss';
 
@@ -23,6 +24,7 @@ export default function RootLayout({
             {children}
           </div>
           <Footer />
+          <WhatsAppButton />
         </AuthProvider>
       </body>
     </html>
