@@ -60,6 +60,13 @@ export default async function AdminDashboardPage() {
             </div>
           </Link>
 
+          <Link href="/admin/documents" className={styles.cardLink}>
+            <div className={styles.card}>
+              <h3>📄 מסמכים</h3>
+              <p>העלאה וניהול מסמכים</p>
+            </div>
+          </Link>
+
           <Link href="/admin/video" className={styles.cardLink}>
             <div className={styles.card}>
               <h3>📹 וידאו</h3>
