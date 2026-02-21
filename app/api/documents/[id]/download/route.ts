@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import DocumentModel from '@/models/Document';
-import { requireAuth } from '@/lib/auth';
 import { errorResponse, handleApiError } from '@/lib/api-response';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/documents/[id]/download
- * Auth-gated: any logged-in user can download
+ * Public: anyone can download
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Require any authenticated user
-    await requireAuth();
     await connectDB();
 
     const doc = await DocumentModel.findById(params.id).select(

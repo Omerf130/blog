@@ -53,12 +53,16 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const title = formData.get('title') as string | null;
+    const description = formData.get('description') as string | null;
     const category = formData.get('category') as string | null;
+    const status = formData.get('status') as string | null;
 
     // Validate metadata
     const metaResult = documentMetaSchema.safeParse({
       title,
+      description: description || undefined,
       category: category || undefined,
+      status: status || undefined,
     });
 
     if (!metaResult.success) {
@@ -85,7 +89,9 @@ export async function POST(request: NextRequest) {
     // Create document
     const doc = await DocumentModel.create({
       title: metaResult.data.title,
+      description: metaResult.data.description || undefined,
       category: metaResult.data.category || undefined,
+      status: metaResult.data.status || 'active',
       originalFilename: file.name,
       mimeType: file.type,
       fileSize: file.size,

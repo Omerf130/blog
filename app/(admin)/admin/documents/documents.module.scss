@@ -70,6 +70,26 @@
   }
 }
 
+.textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: white;
+  color: #1e293b;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+}
+
 .fileInput {
   display: block;
   width: 100%;
@@ -183,6 +203,28 @@
     background: #eff6ff;
     color: #2563eb;
   }
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+
+  &.active {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+
+  &.hidden {
+    background: #f1f5f9;
+    color: #94a3b8;
+  }
+}
+
+.hiddenRow {
+  opacity: 0.6;
 }
 
 .actions {

@@ -1,9 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export type DocumentStatus = 'active' | 'hidden';
+
 export interface IDocument extends Document {
   _id: mongoose.Types.ObjectId;
   title: string;
+  description?: string;
   category?: mongoose.Types.ObjectId;
+  status: DocumentStatus;
   originalFilename: string;
   mimeType: string;
   fileSize: number;
@@ -21,9 +25,19 @@ const DocumentSchema = new Schema<IDocument>(
       trim: true,
       maxlength: [200, 'Title cannot exceed 200 characters'],
     },
+    description: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'Description cannot exceed 500 characters'],
+    },
     category: {
       type: Schema.Types.ObjectId,
       ref: 'Category',
+    },
+    status: {
+      type: String,
+      enum: ['active', 'hidden'],
+      default: 'active',
     },
     originalFilename: {
       type: String,
@@ -60,6 +74,7 @@ const DocumentSchema = new Schema<IDocument>(
 // Indexes
 DocumentSchema.index({ category: 1 });
 DocumentSchema.index({ createdAt: -1 });
+DocumentSchema.index({ status: 1 });
 
 // Prevent model recompilation
 const DocumentModel =

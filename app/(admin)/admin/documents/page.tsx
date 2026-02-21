@@ -8,7 +8,9 @@ import styles from './documents.module.scss';
 interface DocItem {
   _id: string;
   title: string;
+  description?: string;
   category?: { _id: string; name: string };
+  status: 'active' | 'hidden';
   originalFilename: string;
   mimeType: string;
   fileSize: number;
@@ -29,8 +31,12 @@ export default function DocumentsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Form state
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [status, setStatus] = useState<'active' | 'hidden'>('active');
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +75,7 @@ export default function DocumentsPage() {
     e.preventDefault();
     setError('');
 
-    if (!file) {
+    if (!editingId && !file) {
       setError('יש לבחור קובץ');
       return;
     }
@@ -78,15 +84,16 @@ export default function DocumentsPage() {
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      if (file) formData.append('file', file);
       formData.append('title', title);
+      formData.append('description', description);
+      formData.append('status', status);
       if (categoryId) formData.append('category', categoryId);
 
-      const res = await fetch('/api/documents', {
-        method: 'POST',
-        body: formData,
-      });
+      const url = editingId ? `/api/documents/${editingId}` : '/api/documents';
+      const method = editingId ? 'PUT' : 'POST';
 
+      const res = await fetch(url, { method, body: formData });
       const data = await res.json();
 
       if (data.ok) {
@@ -94,12 +101,49 @@ export default function DocumentsPage() {
         resetForm();
         setShowForm(false);
       } else {
-        setError(data.error || 'שגיאה בהעלאה');
+        setError(data.error || 'שגיאה בשמירה');
       }
     } catch (err) {
       setError('שגיאת רשת');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleEdit = (doc: DocItem) => {
+    setEditingId(doc._id);
+    setTitle(doc.title);
+    setDescription(doc.description || '');
+    setCategoryId(doc.category?._id || '');
+    setStatus(doc.status);
+    setFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    setShowForm(true);
+    setError('');
+  };
+
+  const handleToggleStatus = async (doc: DocItem) => {
+    const newStatus = doc.status === 'active' ? 'hidden' : 'active';
+    try {
+      const formData = new FormData();
+      formData.append('title', doc.title);
+      formData.append('status', newStatus);
+      if (doc.description) formData.append('description', doc.description);
+      if (doc.category) formData.append('category', doc.category._id);
+
+      const res = await fetch(`/api/documents/${doc._id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        await fetchDocuments();
+      } else {
+        alert(data.error || 'שגיאה בעדכון סטטוס');
+      }
+    } catch (err) {
+      alert('שגיאת רשת');
     }
   };
 
@@ -121,8 +165,11 @@ export default function DocumentsPage() {
   };
 
   const resetForm = () => {
+    setEditingId(null);
     setTitle('');
+    setDescription('');
     setCategoryId('');
+    setStatus('active');
     setFile(null);
     setError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -155,13 +202,13 @@ export default function DocumentsPage() {
       <div className={styles.header}>
         <h1>📄 ניהול מסמכים</h1>
         {!showForm && (
-          <Button onClick={() => setShowForm(true)}>+ העלאת מסמך</Button>
+          <Button onClick={() => { resetForm(); setShowForm(true); }}>+ העלאת מסמך</Button>
         )}
       </div>
 
       {showForm && (
         <div className={styles.formCard}>
-          <h2>העלאת מסמך חדש</h2>
+          <h2>{editingId ? 'עריכת מסמך' : 'העלאת מסמך חדש'}</h2>
           <form onSubmit={handleSubmit}>
             {error && <div className={styles.error}>{error}</div>}
 
@@ -174,36 +221,63 @@ export default function DocumentsPage() {
             />
 
             <div className={styles.field}>
-              <label>קטגוריה</label>
-              <select
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-              >
-                <option value="">ללא קטגוריה</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+              <label>תיאור קצר</label>
+              <textarea
+                className={styles.textarea}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="תיאור קצר של המסמך..."
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+
+            <div className={styles.row}>
+              <div className={styles.field}>
+                <label>קטגוריה</label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                >
+                  <option value="">ללא קטגוריה</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.field}>
+                <label>סטטוס</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as 'active' | 'hidden')}
+                >
+                  <option value="active">פעיל</option>
+                  <option value="hidden">מוסתר</option>
+                </select>
+              </div>
             </div>
 
             <div className={styles.field}>
-              <label>קובץ (PDF / DOCX) *</label>
+              <label>
+                {editingId ? 'החלפת קובץ (אופציונלי)' : 'קובץ (PDF / DOCX) *'}
+              </label>
               <input
                 ref={fileInputRef}
                 type="file"
                 accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
                 className={styles.fileInput}
-                required
+                required={!editingId}
               />
               <div className={styles.fileHint}>גודל מקסימלי: 10MB</div>
             </div>
 
             <div className={styles.formActions}>
               <Button type="submit" disabled={submitting}>
-                {submitting ? 'מעלה...' : 'העלה'}
+                {submitting ? 'שומר...' : editingId ? 'עדכן' : 'העלה'}
               </Button>
               <Button type="button" variant="secondary" onClick={handleCancel}>
                 ביטול
@@ -227,16 +301,24 @@ export default function DocumentsPage() {
                 <th>קטגוריה</th>
                 <th>סוג</th>
                 <th>גודל</th>
+                <th>סטטוס</th>
                 <th>תאריך</th>
                 <th>פעולות</th>
               </tr>
             </thead>
             <tbody>
               {documents.map((doc) => (
-                <tr key={doc._id}>
+                <tr key={doc._id} className={doc.status === 'hidden' ? styles.hiddenRow : ''}>
                   <td>
                     <strong>{doc.title}</strong>
-                    <div style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>
+                    {doc.description && (
+                      <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
+                        {doc.description.length > 60
+                          ? doc.description.slice(0, 60) + '...'
+                          : doc.description}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
                       {doc.originalFilename}
                     </div>
                   </td>
@@ -252,6 +334,15 @@ export default function DocumentsPage() {
                   <td>{getFileTypeLabel(doc.mimeType)}</td>
                   <td>{formatFileSize(doc.fileSize)}</td>
                   <td>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        doc.status === 'active' ? styles.active : styles.hidden
+                      }`}
+                    >
+                      {doc.status === 'active' ? 'פעיל' : 'מוסתר'}
+                    </span>
+                  </td>
+                  <td>
                     {new Date(doc.createdAt).toLocaleDateString('he-IL', {
                       year: 'numeric',
                       month: 'short',
@@ -259,6 +350,20 @@ export default function DocumentsPage() {
                     })}
                   </td>
                   <td className={styles.actions}>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleEdit(doc)}
+                    >
+                      ✏️ ערוך
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleToggleStatus(doc)}
+                    >
+                      {doc.status === 'active' ? '👁️ הסתר' : '👁️ הצג'}
+                    </Button>
                     <Button
                       size="sm"
                       variant="secondary"
@@ -288,4 +393,3 @@ export default function DocumentsPage() {
     </div>
   );
 }
-

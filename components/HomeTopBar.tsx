@@ -92,18 +92,16 @@ export default function HomeTopBar() {
         <Link href="/ask-lawyer" onClick={closeMenu}>שאל עורך דין</Link>
         <Link href="/about" onClick={closeMenu}>אודות</Link>
         <Link href="/contact" onClick={closeMenu}>צור קשר</Link>
+        <Link href="/downloads" onClick={closeMenu}>מסמכים להורדה</Link>
 
         {user ? (
-          <>
-            <Link href="/downloads" onClick={closeMenu}>מסמכים להורדה</Link>
-            <button
-              type="button"
-              className={styles.logoutLink}
-              onClick={handleLogout}
-            >
-              התנתק
-            </button>
-          </>
+          <button
+            type="button"
+            className={styles.logoutLink}
+            onClick={handleLogout}
+          >
+            התנתק
+          </button>
         ) : (
           <Link href="/login" className={styles.loginLink} onClick={closeMenu}>התחבר</Link>
         )}
