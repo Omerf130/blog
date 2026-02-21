@@ -107,13 +107,16 @@ export default function HomeTopBar() {
         <Link href="/contact" onClick={closeMenu}>צור קשר</Link>
 
         {user ? (
-          <button
-            type="button"
-            className={styles.logoutLink}
-            onClick={handleLogout}
-          >
-            התנתק
-          </button>
+          <>
+            <Link href="/downloads" onClick={closeMenu}>מסמכים להורדה</Link>
+            <button
+              type="button"
+              className={styles.logoutLink}
+              onClick={handleLogout}
+            >
+              התנתק
+            </button>
+          </>
         ) : (
           <Link href="/login" className={styles.loginLink} onClick={closeMenu}>התחבר</Link>
         )}

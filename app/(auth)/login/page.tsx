@@ -63,7 +63,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              placeholder="admin@example.com"
+              placeholder="Enter email..."
               autoComplete="email"
             />
           </div>
