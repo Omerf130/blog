@@ -8,6 +8,8 @@ import {
   handleApiError,
 } from '@/lib/api-response';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/settings
  * Public: returns site settings
