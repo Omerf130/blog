@@ -33,7 +33,7 @@
 .statValue {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--warm-600);
 }
 
 .statLabel {
@@ -118,8 +118,8 @@
 .topic {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: #eff6ff;
-  color: #1e40af;
+  background: var(--warm-100);
+  color: var(--warm-800);
   border-radius: 4px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -138,8 +138,8 @@
   }
 
   &.contacted {
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--warm-100);
+    color: var(--warm-800);
   }
 
   &.converted {
@@ -272,7 +272,7 @@
   }
 
   a {
-    color: #2563eb;
+    color: var(--warm-600);
     text-decoration: none;
 
     &:hover {

@@ -43,31 +43,31 @@
 
   &:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(154, 138, 123, 0.1);
   }
 
   &::placeholder {
-    color: #94a3b8;
+    color: var(--warm-500);
   }
 }
 
 .categoryFilter {
   min-width: 180px;
   padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--warm-200);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
   background: white;
-  color: #1e293b;
+  color: var(--warm-900);
   cursor: pointer;
   transition: border-color 0.2s;
 
   &:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(154, 138, 123, 0.1);
   }
 }
 
@@ -90,7 +90,7 @@
   transition: all 0.2s;
 
   &:hover {
-    border-color: var(--primary-color, #2563eb);
+    border-color: var(--color-accent);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
   }
@@ -121,8 +121,8 @@
 .categoryBadge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: #eff6ff;
-  color: #1e40af;
+    background: var(--warm-50);
+    color: var(--warm-800);
   border-radius: 20px;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -143,8 +143,8 @@
   }
 
   &.docx {
-    background: #eff6ff;
-    color: #2563eb;
+    background: var(--warm-50);
+    color: var(--warm-700);
   }
 }
 
@@ -170,7 +170,7 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--primary-color, #2563eb);
+  background: var(--color-accent);
   color: white;
   border: none;
   border-radius: 8px;
@@ -184,9 +184,9 @@
   margin-top: auto;
 
   &:hover {
-    background: var(--primary-hover, #1e40af);
+    background: var(--color-accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 2px 8px rgba(122, 107, 93, 0.3);
   }
 }
 
@@ -208,7 +208,7 @@
 .loginBtn {
   display: inline-block;
   padding: 0.75rem 2rem;
-  background: var(--primary-color, #2563eb);
+  background: var(--color-accent);
   color: white;
   border-radius: 8px;
   font-weight: 600;
@@ -217,9 +217,9 @@
   transition: all 0.2s;
 
   &:hover {
-    background: var(--primary-hover, #1e40af);
+    background: var(--color-accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 2px 8px rgba(122, 107, 93, 0.3);
   }
 }
 

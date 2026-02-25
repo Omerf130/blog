@@ -8,12 +8,24 @@
 :root {
   // ============================================
   // MINIMALISTIC DESIGN SYSTEM
-  // Based on professional slate & blue palette
+  // Based on warm beige/taupe palette (#D4C9BE)
   // ============================================
 
-  // Primary Slate Colors (Headers, Navigation, Dark UI)
+  // Warm Beige/Taupe Colors (Primary palette)
+  --warm-900: #3D3229;
+  --warm-800: #5C4F43;
+  --warm-700: #7A6B5D;
+  --warm-600: #9A8A7B;
+  --warm-500: #B0A396;
+  --warm-400: #C4B8AC;
+  --warm-300: #D4C9BE; // Main brand color
+  --warm-200: #E3DBD2;
+  --warm-100: #F0EBE6;
+  --warm-50:  #F8F5F2;
+
+  // Slate Colors (kept for admin / structural UI)
   --slate-900: #0f172a;
-  --slate-800: #1e293b; // Your favorite! 
+  --slate-800: #1e293b;
   --slate-700: #334155;
   --slate-600: #475569;
   --slate-500: #64748b;
@@ -23,14 +35,14 @@
   --slate-100: #f1f5f9;
   --slate-50: #f8fafc;
 
-  // Accent Blue (CTAs, Links, Primary Actions)
-  --blue-700: #1d4ed8;
-  --blue-600: #2563eb; // Primary blue
-  --blue-500: #3b82f6;
-  --blue-400: #60a5fa;
-  --blue-300: #93c5fd;
-  --blue-100: #dbeafe;
-  --blue-50: #eff6ff;
+  // Blue aliases (remapped to warm tones — no blue anywhere)
+  --blue-700: var(--warm-700);
+  --blue-600: var(--warm-600);
+  --blue-500: var(--warm-500);
+  --blue-400: var(--warm-400);
+  --blue-300: var(--warm-300);
+  --blue-100: var(--warm-100);
+  --blue-50: var(--warm-50);
 
   // Success Green (Confirmations, Success States)
   --green-700: #15803d;
@@ -56,31 +68,31 @@
   // Semantic Color Tokens
   // --------------------------------------------
   
-  // Primary (Your slate gradient colors)
-  --color-primary: var(--slate-800);
-  --color-primary-hover: var(--slate-900);
-  --color-primary-light: var(--slate-700);
+  // Primary (Warm beige tones)
+  --color-primary: var(--warm-800);
+  --color-primary-hover: var(--warm-900);
+  --color-primary-light: var(--warm-700);
   
-  // Accent (For CTAs and important actions)
-  --color-accent: var(--blue-600);
-  --color-accent-hover: var(--blue-700);
-  --color-accent-light: var(--blue-500);
+  // Accent (For CTAs and important actions — light, close to #D4C9BE)
+  --color-accent: var(--warm-400);
+  --color-accent-hover: var(--warm-500);
+  --color-accent-light: var(--warm-300);
   
   // Text Colors
-  --color-text: var(--slate-800);
-  --color-text-light: var(--slate-600);
-  --color-text-muted: var(--slate-500);
+  --color-text: var(--warm-900);
+  --color-text-light: var(--warm-700);
+  --color-text-muted: var(--warm-600);
   
   // Background Colors
   --color-bg: #ffffff;
-  --color-bg-secondary: var(--slate-50);
-  --color-bg-tertiary: var(--slate-100);
-  --color-bg-dark: var(--slate-800);
+  --color-bg-secondary: var(--warm-50);
+  --color-bg-tertiary: var(--warm-100);
+  --color-bg-dark: var(--warm-800);
   
   // Border Colors
-  --color-border: var(--slate-200);
-  --color-border-light: var(--slate-100);
-  --color-border-dark: var(--slate-300);
+  --color-border: var(--warm-200);
+  --color-border-light: var(--warm-100);
+  --color-border-dark: var(--warm-300);
   
   // Status Colors
   --color-success: var(--green-600);
@@ -95,19 +107,19 @@
   --color-error-bg: var(--red-50);
   --color-error-border: var(--red-100);
   
-  --color-info: var(--blue-600);
-  --color-info-bg: var(--blue-50);
-  --color-info-border: var(--blue-100);
+  --color-info: var(--warm-700);
+  --color-info-bg: var(--warm-50);
+  --color-info-border: var(--warm-100);
 
   // Gradients
-  --gradient-primary: linear-gradient(135deg, var(--slate-800) 0%, var(--slate-700) 100%);
-  --gradient-accent: linear-gradient(135deg, #0E1A2B 0%, #1C2E4A 100%);
-  --gradient-light: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+  --gradient-primary: linear-gradient(135deg, var(--warm-600) 0%, var(--warm-400) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--warm-700) 0%, var(--warm-500) 100%);
+  --gradient-light: linear-gradient(135deg, var(--warm-50) 0%, #ffffff 100%);
   
   // Legacy Support (for backward compatibility)
-  --primary-color: var(--blue-600);
-  --primary-hover: var(--blue-700);
-  --color-secondary: var(--slate-600);
+  --primary-color: var(--warm-500);
+  --primary-hover: var(--warm-600);
+  --color-secondary: var(--warm-500);
   --color-danger: var(--red-600);
   
   // Spacing Scale (8px base)

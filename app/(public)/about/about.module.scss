@@ -135,7 +135,7 @@
   &:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(196, 184, 172, 0.2);
   }
 }
 
@@ -200,15 +200,15 @@
 }
 
 .infoBox {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: var(--warm-50);
+  border: 1px solid var(--warm-200);
   border-radius: 8px;
   padding: 1rem 1.25rem;
 
   p {
     margin: 0;
     font-size: 0.9375rem;
-    color: #1e40af;
+    color: var(--warm-800);
     line-height: 1.6;
   }
 

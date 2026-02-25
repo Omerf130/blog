@@ -1,6 +1,6 @@
 .topBar {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  border-bottom: 3px solid #3b82f6;
+  background: linear-gradient(135deg, var(--warm-800) 0%, var(--warm-700) 100%);
+  border-bottom: 3px solid var(--warm-400);
   position: relative;
   z-index: 101;
 }
@@ -99,7 +99,7 @@
   align-items: center;
 
   &:hover {
-    color: #3b82f6;
+    color: var(--warm-300);
     transform: translateY(-2px);
   }
 }
@@ -131,7 +131,7 @@
   transition: color 0.2s;
 
   &:hover {
-    color: #3b82f6;
+    color: var(--warm-300);
   }
 }
 
@@ -201,7 +201,7 @@
 .loginLink {
   margin-top: 1rem;
   padding: 0.75rem 1rem !important;
-  background: var(--primary-color, #2563eb) !important;
+  background: var(--color-accent) !important;
   color: white !important;
   border-radius: 6px;
   font-weight: 600 !important;
@@ -209,7 +209,7 @@
   border: none !important;
 
   &:hover {
-    background: var(--primary-hover, #1e40af) !important;
+    background: var(--color-accent-hover) !important;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
