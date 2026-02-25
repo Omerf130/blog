@@ -19,6 +19,60 @@ interface YouTubePlayerProps {
   videoUrl: string;
 }
 
+// ── Shared module-level state for YouTube IFrame API loading ──
+let apiReady = false;
+let apiLoading = false;
+const pendingInits: (() => void)[] = [];
+
+function loadYouTubeAPI(initFn: () => void) {
+  // API already available – init immediately
+  if (apiReady && window.YT && window.YT.Player) {
+    initFn();
+    return;
+  }
+
+  // Queue this init callback
+  pendingInits.push(initFn);
+
+  // If the script is already being loaded, just wait for the callback
+  if (apiLoading) return;
+
+  apiLoading = true;
+
+  const drainQueue = () => {
+    apiReady = true;
+    // Call & clear all pending init functions
+    while (pendingInits.length > 0) {
+      const fn = pendingInits.shift();
+      fn?.();
+    }
+  };
+
+  const existingScript = document.querySelector(
+    'script[src="https://www.youtube.com/iframe_api"]'
+  );
+
+  if (existingScript) {
+    if (window.YT && window.YT.Player) {
+      drainQueue();
+    } else {
+      window.onYouTubeIframeAPIReady = drainQueue;
+    }
+    return;
+  }
+
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  tag.onerror = () => {
+    console.error('Failed to load YouTube IFrame API');
+    apiLoading = false;
+  };
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
+
+  window.onYouTubeIframeAPIReady = drainQueue;
+}
+
 /**
  * Extract the YouTube video ID from various URL formats:
  * - https://www.youtube.com/watch?v=VIDEO_ID
@@ -56,7 +110,6 @@ export default function YouTubePlayer({ videoUrl }: YouTubePlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const playerInstanceRef = useRef<YT.Player | null>(null);
-  const scriptLoadedRef = useRef(false);
   const touchControlsTimerRef = useRef<number | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -124,40 +177,14 @@ export default function YouTubePlayer({ videoUrl }: YouTubePlayerProps) {
   useEffect(() => {
     if (!videoId) return;
 
-    if (scriptLoadedRef.current) {
-      if (!window.YT || !window.YT.Player) {
-        window.onYouTubeIframeAPIReady = initializePlayer;
-      } else {
-        initializePlayer();
-      }
-      return;
-    }
-
-    scriptLoadedRef.current = true;
-    const existingScript = document.querySelector(
-      'script[src="https://www.youtube.com/iframe_api"]'
-    );
-    if (existingScript) {
-      if (window.YT && window.YT.Player) {
-        initializePlayer();
-      } else {
-        window.onYouTubeIframeAPIReady = initializePlayer;
-      }
-      return;
-    }
-
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    tag.onerror = () => {
-      console.error('Failed to load YouTube IFrame API');
-      scriptLoadedRef.current = false;
-    };
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
-
-    window.onYouTubeIframeAPIReady = initializePlayer;
+    loadYouTubeAPI(initializePlayer);
 
     return () => {
+      // Remove from pending queue if not yet called
+      const idx = pendingInits.indexOf(initializePlayer);
+      if (idx !== -1) pendingInits.splice(idx, 1);
+
+      // Destroy the player instance
       if (playerInstanceRef.current) {
         try {
           playerInstanceRef.current.destroy();
