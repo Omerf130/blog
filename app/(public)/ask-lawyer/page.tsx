@@ -7,11 +7,20 @@ import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
 import styles from './ask-lawyer.module.scss';
 
+interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  topic?: string;
+  message?: string;
+}
+
 export default function AskLawyerPage() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const [formData, setFormData] = useState({
     name: '',
@@ -21,9 +30,56 @@ export default function AskLawyerPage() {
     message: '',
   });
 
+  const updateField = (field: keyof FormErrors, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'שדה חובה';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'שם חייב להכיל לפחות 2 תווים';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'שדה חובה';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'כתובת אימייל לא תקינה';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'שדה חובה';
+    } else if (formData.phone.trim().length < 9) {
+      newErrors.phone = 'מספר טלפון לא תקין';
+    } else if (!/^[0-9\-+\s()]+$/.test(formData.phone.trim())) {
+      newErrors.phone = 'מספר טלפון יכול להכיל רק ספרות ותווים מיוחדים';
+    }
+
+    if (!formData.topic) {
+      newErrors.topic = 'יש לבחור נושא';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'שדה חובה';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'ההודעה חייבת להכיל לפחות 10 תווים';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!validate()) return;
+
     setSubmitting(true);
 
     try {
@@ -44,6 +100,16 @@ export default function AskLawyerPage() {
           topic: '',
           message: '',
         });
+      } else if (data.details && Array.isArray(data.details)) {
+        // Map server validation errors to inline field errors
+        const serverErrors: FormErrors = {};
+        for (const detail of data.details) {
+          const field = detail.path?.[0] as keyof FormErrors | undefined;
+          if (field && !serverErrors[field]) {
+            serverErrors[field] = detail.message;
+          }
+        }
+        setErrors(serverErrors);
       } else {
         setError(data.error || 'שגיאה בשליחת הטופס');
       }
@@ -100,8 +166,8 @@ export default function AskLawyerPage() {
               <Input
                 label="שם מלא *"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
+                onChange={(e) => updateField('name', e.target.value)}
+                error={errors.name}
                 placeholder="שם מלא"
               />
 
@@ -109,8 +175,8 @@ export default function AskLawyerPage() {
                 label="אימייל *"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
+                onChange={(e) => updateField('email', e.target.value)}
+                error={errors.email}
                 placeholder="example@email.com"
               />
 
@@ -118,8 +184,8 @@ export default function AskLawyerPage() {
                 label="טלפון *"
                 type="tel"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
+                onChange={(e) => updateField('phone', e.target.value)}
+                error={errors.phone}
                 placeholder="050-1234567"
               />
             </div>
@@ -130,10 +196,9 @@ export default function AskLawyerPage() {
               <div className={styles.field}>
                 <label className={styles.fieldLabel}>בחר נושא *</label>
                 <select
-                  className={styles.select}
+                  className={`${styles.select} ${errors.topic ? styles.selectError : ''}`}
                   value={formData.topic}
-                  onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                  required
+                  onChange={(e) => updateField('topic', e.target.value)}
                 >
                   <option value="">-- בחר נושא --</option>
                   <option value="דיני מקרקעין">דיני מקרקעין</option>
@@ -145,13 +210,14 @@ export default function AskLawyerPage() {
                   <option value="קבלנים">קבלנים</option>
                   <option value="אחר">אחר</option>
                 </select>
+                {errors.topic && <span className={styles.fieldError}>{errors.topic}</span>}
               </div>
 
               <Textarea
                 label="תאר את השאלה או הבעיה המשפטית *"
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                required
+                onChange={(e) => updateField('message', e.target.value)}
+                error={errors.message}
                 placeholder="ספר לנו בקצרה על המצב המשפטי שלך..."
                 rows={8}
               />
