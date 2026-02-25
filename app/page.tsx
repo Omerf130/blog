@@ -125,10 +125,11 @@ export default async function HomePage({
               className={styles.logo}
             />
           </div>
-          <h1 className={styles.heroTitle}>הבלוג המשפטי למקרקעין ונדל"ן</h1>
+          <h1 className={styles.heroTitle}>שיפוטי - המרכז המקצועי ליישוב סכסוכי שכנים וליקויי בנייה בישראל</h1>
           <p className={styles.heroSubtitle}>
             טיפים חיוניים בנושאי נדל"ן, ליקויי בנייה ודיני מקרקעין מעורכי הדין במשרד 
           </p>
+          <a href="/about" className={styles.heroCta}>קצת עלינו</a>
         </div>
       </div>
 
