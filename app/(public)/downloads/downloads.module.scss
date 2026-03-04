@@ -74,7 +74,7 @@
 // Cards grid
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
@@ -246,24 +246,67 @@
 }
 
 // Responsive
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
   }
 
   .title {
     font-size: 2rem;
   }
 
+  .filters {
+    flex-direction: column;
+  }
+
+  .searchInput {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .categoryFilter {
+    min-width: 0;
+    width: 100%;
+  }
+
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(240px, 1fr);
     gap: 1rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .cardTitle {
+    font-size: 1.05rem;
+  }
+
+  .downloadBtn {
+    font-size: 0.9375rem;
+    padding: 0.625rem 0.75rem;
   }
 }
 
