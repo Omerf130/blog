@@ -8,6 +8,7 @@ interface DocItem {
   title: string;
   description?: string;
   category?: { _id: string; name: string };
+  status: 'active' | 'hidden';
   originalFilename: string;
   mimeType: string;
   fileSize: number;
@@ -23,6 +24,7 @@ export default function DownloadsPage() {
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -54,6 +56,7 @@ export default function DownloadsPage() {
       const data = await res.json();
       if (data.ok) {
         setDocuments(data.data.documents);
+        setIsAuthenticated(data.data.isAuthenticated);
       }
     } catch (err) {
       console.error('Error fetching documents:', err);
@@ -151,14 +154,20 @@ export default function DownloadsPage() {
                 <span>{formatFileSize(doc.fileSize)}</span>
               </div>
 
-              <a
-                href={`/api/documents/${doc._id}/download`}
-                className={styles.downloadBtn}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ⬇️ הורד מסמך
-              </a>
+              {doc.status === 'active' || isAuthenticated ? (
+                <a
+                  href={`/api/documents/${doc._id}/download`}
+                  className={styles.downloadBtn}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ⬇️ הורד מסמך
+                </a>
+              ) : (
+                <a href="/register" className={styles.registerBtn}>
+                  להורדת המסמך נא להרשם
+                </a>
+              )}
             </div>
           ))}
         </div>

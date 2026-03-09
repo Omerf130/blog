@@ -9,9 +9,9 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/documents/public
- * Returns document metadata (no file data).
- * - Logged-out users: only "active" documents
- * - Logged-in users: both "active" and "hidden" documents
+ * Returns all document metadata (no file data) to everyone.
+ * Also returns isAuthenticated so the frontend can gate downloads
+ * for hidden docs behind registration.
  * Supports ?q= for search and ?category= for category filter
  */
 export async function GET(request: NextRequest) {
@@ -26,11 +26,6 @@ export async function GET(request: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filter: Record<string, any> = {};
-
-    // Only filter by status for logged-out users
-    if (!user) {
-      filter.status = 'active';
-    }
 
     if (q) {
       filter.$or = [
@@ -48,7 +43,7 @@ export async function GET(request: NextRequest) {
       .populate('category', 'name')
       .sort({ createdAt: -1 });
 
-    return successResponse({ documents });
+    return successResponse({ documents, isAuthenticated: !!user });
   } catch (error) {
     return handleApiError(error);
   }
