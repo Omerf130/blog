@@ -9,7 +9,7 @@ import PostCard from '@/components/PostCard';
 import SearchBar from '@/components/SearchBar';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import Link from 'next/link';
-import { getCurrentUser } from '@/lib/auth';
+import AuthLinks from '@/components/AuthLinks';
 import styles from './home.module.scss';
 
 export const dynamic = 'force-dynamic';
@@ -53,9 +53,6 @@ export default async function HomePage({
   searchParams: { page?: string };
 }) {
   await connectDB();
-
-  // Check if user is authenticated
-  const user = await getCurrentUser();
 
   // Parse & clamp page number
   const pageParam = parseInt(searchParams.page || '1', 10);
@@ -144,49 +141,7 @@ export default async function HomePage({
             </div>
 
             <div className={styles.authLinks}>
-              {user ? (
-                <>
-                  {(user.role === 'admin' || user.role === 'editor') && (
-                    <Link href="/admin" className={styles.authLink}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-                      </svg>
-                      ניהול
-                    </Link>
-                  )}
-                  <form action="/api/auth/logout" method="POST" className={styles.logoutForm}>
-                    <button type="submit" className={styles.authLink}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                      </svg>
-                      התנתק
-                    </button>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <Link href="/login" className={styles.authLink}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                      <polyline points="10 17 15 12 10 7"/>
-                      <line x1="15" y1="12" x2="3" y2="12"/>
-                    </svg>
-                    התחבר
-                  </Link>
-                  <Link href="/register" className={styles.authLinkPrimary}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                      <circle cx="8.5" cy="7" r="4"/>
-                      <line x1="20" y1="8" x2="20" y2="14"/>
-                      <line x1="23" y1="11" x2="17" y2="11"/>
-                    </svg>
-                    הרשם
-                  </Link>
-                </>
-              )}
+              <AuthLinks />
             </div>
           </div>
         </div>
