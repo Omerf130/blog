@@ -147,6 +147,7 @@ PostSchema.index({ slugHe: 1 }, { unique: true });
 PostSchema.index({ status: 1, publishedAt: -1 });
 PostSchema.index({ categories: 1 });
 PostSchema.index({ disputeType: 1 });
+PostSchema.index({ publishedAt: -1, createdAt: -1 });
 PostSchema.index({ authorLawyerId: 1 });
 // Text index for search
 PostSchema.index({ title: 'text', summary: 'text', content: 'text' });
